@@ -27,7 +27,7 @@ public class Genre {
     @Column(length = 50)
     private String description;
 
-    @OneToMany(mappedBy = "genero")
+    @OneToMany(mappedBy = "genre")
     private List<Book> books;
 
 }
