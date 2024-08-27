@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -30,6 +32,6 @@ public class Book {
     private double price;
 
     @ManyToOne
-    private Genre genre;
+    private List<Genre> genres;
 
 }
