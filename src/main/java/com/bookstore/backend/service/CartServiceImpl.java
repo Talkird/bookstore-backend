@@ -9,20 +9,20 @@ import com.bookstore.backend.model.Cart;
 import com.bookstore.backend.repository.CartRepository;
 
 @Service
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
 
     @Autowired
     private CartRepository cartRepository;
 
     @Override
     public Page<Cart> getCart(PageRequest pageRequest) {
-        //TODO
+        // TODO
         return null;
     }
 
     @Override
     public void clearCart() {
-        //TODO;
+        // TODO;
     }
-    
+
 }
