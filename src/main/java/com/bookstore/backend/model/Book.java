@@ -1,14 +1,15 @@
 package com.bookstore.backend.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
@@ -30,8 +31,8 @@ public class Book {
     private int year;
     @Column
     private double price;
-
-    @ManyToOne
+    
+    @Enumerated(EnumType.STRING)
     private Genre genre;
 
 }
