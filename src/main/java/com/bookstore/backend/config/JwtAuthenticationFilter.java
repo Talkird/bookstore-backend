@@ -1,4 +1,4 @@
-package com.uade.tpo.demo.controllers.config;
+package com.bookstore.backend.config;
 
 import java.io.IOException;
 
