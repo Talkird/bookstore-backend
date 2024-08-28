@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import com.bookstore.backend.auth.AuthenticationResponse;
 import com.bookstore.backend.auth.RegisterRequest;
 import com.bookstore.backend.config.JwtService;
-import com.bookstore.model.User;  //todo
-//import com.uade.tpo.demo.entity.User;
-import com.backend.repository.UserRepository; //todo 
+import com.bookstore.backend.model.User;  
+import com.bookstore.backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

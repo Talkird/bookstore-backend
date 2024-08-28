@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import lombok.RequiredArgsConstructor;
 
-import com.bookstore.model.role;
 
 @Configuration
 @EnableWebSecurity

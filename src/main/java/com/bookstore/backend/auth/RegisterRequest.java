@@ -1,6 +1,6 @@
-package com.bookstore.backend.auth;   //todo
+package com.bookstore.backend.auth;   
 
-import com.bookstore.model.Role; //todo
+import com.bookstore.backend.model.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
