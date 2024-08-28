@@ -25,10 +25,22 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(req -> req
-                .requestMatchers("/api/v1/auth/**").permitAll() //cualquier usuario podrá acceder a él sin necesidad de estar autenticado. Esto es útil para endpoints como el login o el registro, donde no tiene sentido pedir autenticación previa.
-                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") //solo los usuarios que tengan el rol ADMIN podrán acceder a él. Los usuarios con otros roles, o sin autenticación, recibirán un error de acceso denegado.
-                .requestMatchers("/api/v1/user/**").hasAnyRole("USER", "ADMIN") // los usuarios con el rol USER como los que tienen el rol ADMIN podrán acceder. Esto permite que tanto usuarios comunes como administradores puedan acceder a estos recursos.
-                .anyRequest().authenticated() //Esta línea asegura que cualquier otra solicitud no especificada anteriormente requiere que el usuario esté autenticado, sin importar el rol.
+                // Endpoints que no requieren autenticación
+                .requestMatchers("/api/v1/auth/**").permitAll() // Registro, login, etc.
+                .requestMatchers("/error/**").permitAll() // Páginas de error
+                .requestMatchers("/public/**").permitAll() // Recursos públicos como imágenes, CSS, etc.
+                // Endpoints de categorías, solo accesibles por usuarios autenticados
+                .requestMatchers("/categories/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                // Endpoints de carrito de compras, solo para usuarios con rol USER
+                .requestMatchers("/cart/**").hasAuthority(Role.USER.name())
+                // Endpoints de administración, solo accesibles por usuarios con rol ADMIN
+                .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
+                // Endpoint de perfil, solo para el usuario autenticado
+                .requestMatchers("/profile/**").authenticated()
+                // Endpoint para finalizar compra, accesible solo por usuarios con rol USER
+                .requestMatchers("/checkout/**").hasAuthority(Role.USER.name())
+                // Otros endpoints requieren autenticación
+                .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
             .authenticationProvider(authenticationProvider)

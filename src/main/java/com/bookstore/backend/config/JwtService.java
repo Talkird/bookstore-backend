@@ -33,6 +33,7 @@ public class JwtService {
                 .builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis())) 
+                .claim("Gustavo", 12345)
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
                 .compact();
@@ -55,11 +56,7 @@ public class JwtService {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-
-    private Date extractExpiDate(String token){
-        return extractClaim(token, Claims:getExpiration);
-    }
-
+    
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
