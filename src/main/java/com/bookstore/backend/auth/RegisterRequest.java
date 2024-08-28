@@ -1,6 +1,6 @@
-package com.uade.tpo.demo.controllers.auth;
+package com.bookstore.backend.auth;   //todo
 
-import com.uade.tpo.demo.entity.Role;
+import com.bookstore.model.Role; //todo
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
 
-    private String firstname;
+    private String firstname;  //todo */
     private String lastname;
     private String email;
     private String password;

@@ -5,12 +5,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.bookstore.backend.auth.*;
-import com.uade.tpo.demo.controllers.auth.AuthenticationResponse;
-import com.uade.tpo.demo.controllers.auth.RegisterRequest;
-import com.uade.tpo.demo.controllers.config.JwtService;
-import com.uade.tpo.demo.entity.User;
-import com.uade.tpo.demo.repository.UserRepository;
+import com.bookstore.backend.auth.AuthenticationResponse;
+import com.bookstore.backend.auth.RegisterRequest;
+import com.bookstore.backend.config.JwtService;
+import com.bookstore.model.User;  //todo
+//import com.uade.tpo.demo.entity.User;
+import com.backend.repository.UserRepository; //todo 
 
 import lombok.RequiredArgsConstructor;
 

@@ -40,7 +40,7 @@ public class User implements UserDetails{
     @JoinColumn(name = "role_id")
     private Role role;
 
-        @Override
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
