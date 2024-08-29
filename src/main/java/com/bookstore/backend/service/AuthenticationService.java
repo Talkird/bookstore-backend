@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bookstore.backend.auth.AuthenticationRequest;
 import com.bookstore.backend.auth.AuthenticationResponse;
 import com.bookstore.backend.auth.RegisterRequest;
 import com.bookstore.backend.config.JwtService;
@@ -12,6 +13,7 @@ import com.bookstore.backend.model.User;
 import com.bookstore.backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +25,7 @@ public class AuthenticationService {
 
         public AuthenticationResponse register(RegisterRequest request) {
                 var user = User.builder()
-                                .firstName(request.getFirstname())
-                                .lastName(request.getLastname())
+                                .username(request.getUsername())
                                 .email(request.getEmail())
                                 .password(passwordEncoder.encode(request.getPassword()))
                                 .role(request.getRole())

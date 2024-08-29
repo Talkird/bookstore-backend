@@ -1,5 +1,6 @@
 package com.bookstore.backend.model;
 
+
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.List;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,14 +15,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @Entity
 @NoArgsConstructor
 @Builder
+@AllArgsConstructor
 @Table(name = "user")
 public class User implements UserDetails{
 
