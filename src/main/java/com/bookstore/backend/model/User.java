@@ -1,8 +1,9 @@
 package com.bookstore.backend.model;
 
 
-import org.hibernate.mapping.Collection;
-import org.hibernate.mapping.List;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,15 +53,6 @@ public class User implements UserDetails{
     }
 
     @Override
-    public String getUsername() {
-        return email;
-    }
-
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -80,9 +72,4 @@ public class User implements UserDetails{
         return true;
     }
 
-    @Override
-    public java.util.Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
-    }
 }
