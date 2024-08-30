@@ -12,8 +12,4 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     
     Optional<Cart> findByUserId(Long userId);
 
-    
 }
-
-//TODO agregar metodo para limpiar carrito
-//seleccionar todos los items del carrito

@@ -25,15 +25,12 @@ public class CartServiceImpl implements CartService {
     private BookRepository bookRepository;
 
     public CartItem addItemToCart(Long userId, Long bookId) {
-        // Find the cart for the user
         Cart cart = cartRepository.findByUserId(userId)
                                   .orElseThrow(() -> new RuntimeException("Cart not found for user"));
 
-        // Find the book
         Book book = bookRepository.findById(bookId)
                                   .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        // Check if the book is already in the cart
         Optional<CartItem> existingCartItem = cart.getBooks()
                                                   .stream()
                                                   .filter(item -> item.getBook().getId().equals(bookId))
@@ -41,11 +38,9 @@ public class CartServiceImpl implements CartService {
 
         CartItem cartItem;
         if (existingCartItem.isPresent()) {
-            // If the book is already in the cart, increment the quantity
             cartItem = existingCartItem.get();
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         } else {
-            // If the book is not in the cart, create a new CartItem
             cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setBook(book);
@@ -53,13 +48,10 @@ public class CartServiceImpl implements CartService {
             cart.getBooks().add(cartItem);
         }
 
-        // Update the price based on the quantity
         cartItem.updatePrice();
 
-        // Update the cart total
         cart.updateTotal();
 
-        // Save cart item and cart
         cartRepository.save(cart);
         return cartItemRepository.save(cartItem);
     }
@@ -79,18 +71,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItem updateCartItem(CartItem cartItem) {
-        // Find the cart item in the database
         CartItem existingCartItem = cartItemRepository.findById(cartItem.getId())
             .orElseThrow(() -> new RuntimeException("CartItem not found"));
 
-        // Update the quantity and price
         existingCartItem.setQuantity(cartItem.getQuantity());
         existingCartItem.setPrice(existingCartItem.getBook().getPrice() * cartItem.getQuantity());
 
-        // Save the updated cart item
         cartItemRepository.save(existingCartItem);
 
-        // Update the cart total
         Cart cart = existingCartItem.getCart();
         cart.updateTotal();
         cartRepository.save(cart);
@@ -99,23 +87,17 @@ public class CartServiceImpl implements CartService {
     }
     @Override
     public void deleteCartItem(Long id) {
-        // Find the cart item in the database
         CartItem cartItem = cartItemRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("CartItem not found"));
 
-        // Get the associated cart
         Cart cart = cartItem.getCart();
 
-        // Remove the cart item from the cart
         cart.getBooks().remove(cartItem);
 
-        // Update the cart total
         cart.updateTotal();
 
-        // Delete the cart item
         cartItemRepository.delete(cartItem);
 
-        // Save the updated cart
         cartRepository.save(cart);
     }
 }
