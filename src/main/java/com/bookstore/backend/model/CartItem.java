@@ -27,4 +27,8 @@ public class CartItem {
 
     @Column
     private double price;
+
+    public void updatePrice() {
+        this.price = this.book.getPrice() * this.quantity;
+    }
 }
