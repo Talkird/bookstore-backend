@@ -1,6 +1,7 @@
 package com.bookstore.backend.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.backend.model.Book;
+import com.bookstore.backend.model.Genre;
 import com.bookstore.backend.repository.BookRepository;
 
 @Service
@@ -29,6 +31,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBookById(Long id) {
         return bookRepository.findById(id).orElse(null);
+    }
+
+    @Override 
+    public List<Book> getBookByGenre(Genre genre) {
+        return bookRepository.findByGenre(genre);
     }
 
     @Override
