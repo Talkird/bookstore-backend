@@ -26,4 +26,11 @@ public class Cart {
     @Column
     private double total;
 
+    public void updateTotal() {
+        this.total = 0;
+        for (CartItem cartItem : books) {
+            total += cartItem.getPrice() * cartItem.getQuantity();
+        }
+    }
+
 }
