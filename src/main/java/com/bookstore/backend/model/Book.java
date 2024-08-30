@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -42,6 +43,10 @@ public class Book {
     @PositiveOrZero(message = "Stock must be zero or positive")
     @Column(nullable = false)
     private int stock;
+
+    @Lob
+    @Column(nullable = false)
+    private byte[] picture;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
