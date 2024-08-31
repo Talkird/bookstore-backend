@@ -60,6 +60,20 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Map<String, Object>> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
+        log.error("El correo ya está registrado: {}", ex.getMessage(), ex);
+        return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(JwtTokenMalformedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<Map<String, Object>> handleJwtTokenMalformedException(JwtTokenMalformedException ex) {
+        log.error("Token JWT malformado: {}", ex.getMessage(), ex);
+        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(Exception ex, WebRequest request) {
         log.error("Error interno en el servidor: {}", ex.getMessage(), ex);
