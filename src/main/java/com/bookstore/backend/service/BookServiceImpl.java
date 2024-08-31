@@ -60,4 +60,41 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
+    @Override
+    public List<Book> getBooksByPriceRange(double minPrice, double maxPrice) {
+        return bookRepository.findByPriceBetween(minPrice, maxPrice);
+    }
+
+    @Override
+    public List<Book> getBooksByTitle(String title) {
+        return bookRepository.findByTitleContaining(title);
+    }
+
+    @Override
+    public List<Book> getBooksByAuthor(String author) {
+        return bookRepository.findByAuthorContaining(author);
+    }
+
+    @Override
+    public List<Book> getAvailableBooks() {
+        return bookRepository.findByStockGreaterThan(0);
+    }
+
+    @Override
+    public List<Book> getBooksOrderedByPrice(boolean ascending) {
+        if (ascending) {
+            return bookRepository.findAllByOrderByPriceAsc();
+        } else {
+            return bookRepository.findAllByOrderByPriceDesc();
+        }
+    }
+
+    @Override
+    public List<Book> getBooksOrderedByPublicationDate(boolean ascending) {
+        if (ascending) {
+            return bookRepository.findAllByOrderByPublicationDateAsc();
+        } else {
+            return bookRepository.findAllByOrderByPublicationDateDesc();
+        }
+    }
 }

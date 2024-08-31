@@ -21,4 +21,15 @@ public interface BookService {
 
     public void deleteBook(Long id);
 
+    public List<Book> getBooksByPriceRange(double minPrice, double maxPrice);
+
+    public List<Book> getBooksByTitle(String title);
+    
+    public List<Book> getBooksByAuthor(String author);
+
+    public List<Book> getAvailableBooks();
+
+    public List<Book> getBooksOrderedByPrice(boolean ascending);
+
+    public List<Book> getBooksOrderedByPublicationDate(boolean ascending);
 }
