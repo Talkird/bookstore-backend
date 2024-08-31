@@ -2,6 +2,7 @@ package com.bookstore.backend.service;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Override
     public CartItem addItemToCart(Long userId, Long bookId) {
         Cart cart = cartRepository.findByUserId(userId)
                                   .orElseThrow(() -> new RuntimeException("Cart not found for user"));

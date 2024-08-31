@@ -1,7 +1,7 @@
 package com.bookstore.backend.service;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,11 +29,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book createBook(Book book) {
         if (bookRepository.existsById(book.getId())) {
-            throw new BookAlreadyExistsException("A book with ISBN " + book.getIsbn() + " already exists.");
+            throw new BookAlreadyExistsException("Un libro con ISBN " + book.getIsbn() + " ya existe.");
         }
         
         if (book.getPrice() <= 0) {
-            throw new InvalidBookDataException("Price must be positive.");
+            throw new InvalidBookDataException("El precio debe ser positivo.");
         }
 
         return bookRepository.save(book);
@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBookById(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> 
-            new BookNotFoundException("Book with ID " + id + " not found."));
+            new BookNotFoundException("No se encontró un libro con ID " + id));
     }
 
     @Override
@@ -55,7 +55,11 @@ public class BookServiceImpl implements BookService {
         Optional<Book> bookOptional = bookRepository.findById(book.getId());
 
         if (!bookOptional.isPresent()) {
-            throw new BookNotFoundException("Book with ID " + book.getId() + " not found.");
+            throw new BookNotFoundException("No se encontró un libro con ID " + book.getId());
+        }
+
+        if (book.getPrice() <= 0) {
+            throw new InvalidBookDataException("El precio debe ser positivo.");
         }
 
         Book existingBook = bookOptional.get();
@@ -70,13 +74,16 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(Long id) {
         if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException("Book with ID " + id + " not found.");
+            throw new BookNotFoundException("No se encontró un libro con ID " + id);
         }
         bookRepository.deleteById(id);
     }
 
     @Override
     public List<Book> getBooksByPriceRange(double minPrice, double maxPrice) {
+        if (minPrice < 0 || maxPrice < 0) {
+            throw new InvalidBookDataException("El rango de precios debe ser positivo.");
+        }
         return bookRepository.findByPriceBetween(minPrice, maxPrice);
     }
 
