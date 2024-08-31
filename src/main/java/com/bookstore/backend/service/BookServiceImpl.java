@@ -22,12 +22,16 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Override
-    public Page<Book> getBooks(PageRequest pageRequest) {
-        return bookRepository.findAll(pageRequest);
+    public Page<Book> getBooks(PageRequest pageRequest) throws BookNotFoundException {
+        Page<Book> books = bookRepository.findAll(pageRequest);
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No se encontraron libros.");
+        }
+        return books;
     }
 
     @Override
-    public Book createBook(Book book) {
+    public Book createBook(Book book) throws BookAlreadyExistsException, InvalidBookDataException {
         if (bookRepository.existsById(book.getId())) {
             throw new BookAlreadyExistsException("Un libro con ISBN " + book.getIsbn() + " ya existe.");
         }
@@ -40,18 +44,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(Long id) {
+    public Book getBookById(Long id) throws BookNotFoundException {
         return bookRepository.findById(id).orElseThrow(() -> 
             new BookNotFoundException("No se encontró un libro con ID " + id));
     }
 
     @Override
-    public List<Book> getBookByGenre(Genre genre) {
-        return bookRepository.findByGenre(genre);
+    public List<Book> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException {
+        List<Book> books = bookRepository.findByGenre(genre);
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No se encontraron libros para el género " + genre);
+        }
+        return books;
     }
 
     @Override
-    public Book updateBook(Book book) {
+    public Book updateBook(Book book) throws BookNotFoundException, InvalidBookDataException {
         Optional<Book> bookOptional = bookRepository.findById(book.getId());
 
         if (!bookOptional.isPresent()) {
@@ -72,7 +80,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(Long id) {
+    public void deleteBook(Long id) throws BookNotFoundException {
         if (!bookRepository.existsById(id)) {
             throw new BookNotFoundException("No se encontró un libro con ID " + id);
         }
@@ -80,35 +88,52 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByPriceRange(double minPrice, double maxPrice) {
-        if (minPrice < 0 || maxPrice < 0) {
-            throw new InvalidBookDataException("El rango de precios debe ser positivo.");
+    public List<Book> getBooksByPriceRange(double minPrice, double maxPrice) throws InvalidBookDataException {
+        if (minPrice <= 0 || maxPrice <= minPrice) {
+            throw new InvalidBookDataException("Rango de precios invalido.");
         }
         return bookRepository.findByPriceBetween(minPrice, maxPrice);
     }
 
     @Override
-    public List<Book> getBooksByTitle(String title) {
-        return bookRepository.findByTitleContaining(title);
-    }
-
-    @Override
-    public List<Book> getBooksByAuthor(String author) {
-        return bookRepository.findByAuthorContaining(author);
-    }
-
-    @Override
-    public List<Book> getAvailableBooks() {
-        return bookRepository.findByStockGreaterThan(0);
-    }
-
-    @Override
-    public List<Book> getBooksOrderedByPrice(boolean ascending) {
-        if (ascending) {
-            return bookRepository.findAllByOrderByPriceAsc();
-        } else {
-            return bookRepository.findAllByOrderByPriceDesc();
+    public List<Book> getBooksByTitle(String title) throws BookNotFoundException {
+        List<Book> books = bookRepository.findByTitleContaining(title);
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No se encontraron libros con el título " + title);
         }
+        return books;
     }
 
+    @Override
+    public List<Book> getBooksByAuthor(String author) throws BookNotFoundException {
+        List<Book> books = bookRepository.findByAuthorContaining(author);
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No se encontraron libros del autor " + author);
+        }
+        // Assuming author is always valid; otherwise, add more validation logic if needed
+        return books;
+    }
+
+    @Override
+    public List<Book> getAvailableBooks() throws BookNotFoundException {
+        List<Book> books = bookRepository.findByStockGreaterThan(0);
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No se encontraron libros disponibles.");
+        }
+        return books;
+    }
+
+    @Override
+    public List<Book> getBooksOrderedByPrice(boolean ascending) throws BookNotFoundException {
+        List<Book> books;
+        if (ascending) {
+            books = bookRepository.findAllByOrderByPriceAsc();
+        } else {
+            books = bookRepository.findAllByOrderByPriceDesc();
+        }
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No se encontraron libros ordenados por precio.");
+        }
+        return books;
+    }
 }

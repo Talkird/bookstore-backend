@@ -48,7 +48,6 @@ public class AuthenticationService {
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 try {
-                    // Intentar autenticar al usuario con las credenciales proporcionadas
                     authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
@@ -56,7 +55,6 @@ public class AuthenticationService {
                         )
                     );
                 } catch (BadCredentialsException ex) {
-                    // Lanzar excepción personalizada si las credenciales son incorrectas
                     throw new InvalidCredentialsException("Nombre de usuario o contraseña incorrectos.");
                 }
             
@@ -69,5 +67,4 @@ public class AuthenticationService {
                     .accessToken(jwtToken)
                     .build();
             }
-
 }
