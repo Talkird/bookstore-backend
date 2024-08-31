@@ -39,14 +39,22 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem;
         if (existingCartItem.isPresent()) {
             cartItem = existingCartItem.get();
+            if (book.getStock() <= 0) {
+                throw new RuntimeException("Book is out of stock");
+            }
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         } else {
+            if (book.getStock() <= 0) {
+                throw new RuntimeException("Book is out of stock");
+            }
             cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setBook(book);
             cartItem.setQuantity(1);
             cart.getBooks().add(cartItem);
         }
+        
+        bookRepository.save(book);
 
         cartItem.updatePrice();
 
@@ -97,6 +105,27 @@ public class CartServiceImpl implements CartService {
         cart.updateTotal();
 
         cartItemRepository.delete(cartItem);
+
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public void checkoutCart(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                                  .orElseThrow(() -> new RuntimeException("Cart not found for user"));
+
+        for (CartItem cartItem : cart.getBooks()) {
+            Book book = cartItem.getBook();
+            if (book.getStock() < cartItem.getQuantity()) {
+                throw new RuntimeException("Book is out of stock");
+            }
+            book.setStock(book.getStock() - cartItem.getQuantity());
+            bookRepository.save(book);
+        }
+
+        clearCart(userId);
+
+        //TODO create order
 
         cartRepository.save(cart);
     }
