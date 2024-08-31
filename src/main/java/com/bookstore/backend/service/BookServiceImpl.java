@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(id).orElse(null);
     }
 
-    @Override 
+    @Override
     public List<Book> getBookByGenre(Genre genre) {
         return bookRepository.findByGenre(genre);
     }
@@ -89,12 +89,4 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    @Override
-    public List<Book> getBooksOrderedByPublicationDate(boolean ascending) {
-        if (ascending) {
-            return bookRepository.findAllByOrderByPublicationDateAsc();
-        } else {
-            return bookRepository.findAllByOrderByPublicationDateDesc();
-        }
-    }
 }
