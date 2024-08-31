@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.bookstore.backend.exceptions.JwtTokenMalformedException;
+
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -42,8 +45,12 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractClaim(token, Claims::getSubject);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        try {
+                final String username = extractClaim(token, Claims::getSubject);
+                return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+            } catch (JwtException | IllegalArgumentException e) {
+                throw new JwtTokenMalformedException("El token JWT no es válido.");
+            }    
     }
 
     private boolean isTokenExpired(String token) {

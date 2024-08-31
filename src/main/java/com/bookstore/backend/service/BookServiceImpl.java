@@ -8,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.bookstore.backend.exceptions.BookAlreadyExistsException;
+import com.bookstore.backend.exceptions.BookNotFoundException;
+import com.bookstore.backend.exceptions.InvalidBookDataException;
 import com.bookstore.backend.model.Book;
 import com.bookstore.backend.model.Genre;
 import com.bookstore.backend.repository.BookRepository;
@@ -25,12 +28,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book createBook(Book book) {
+        if (bookRepository.existsById(book.getId())) {
+            throw new BookAlreadyExistsException("A book with ISBN " + book.getIsbn() + " already exists.");
+        }
+        
+        if (book.getPrice() <= 0) {
+            throw new InvalidBookDataException("Price must be positive.");
+        }
+
         return bookRepository.save(book);
     }
 
     @Override
     public Book getBookById(Long id) {
-        return bookRepository.findById(id).orElse(null);
+        return bookRepository.findById(id).orElseThrow(() -> 
+            new BookNotFoundException("Book with ID " + id + " not found."));
     }
 
     @Override
@@ -43,7 +55,7 @@ public class BookServiceImpl implements BookService {
         Optional<Book> bookOptional = bookRepository.findById(book.getId());
 
         if (!bookOptional.isPresent()) {
-            return null;
+            throw new BookNotFoundException("Book with ID " + book.getId() + " not found.");
         }
 
         Book existingBook = bookOptional.get();
@@ -57,6 +69,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBook(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new BookNotFoundException("Book with ID " + id + " not found.");
+        }
         bookRepository.deleteById(id);
     }
 
