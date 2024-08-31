@@ -6,8 +6,7 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
-
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +20,18 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    @Value("${application.security.jwt.secretKey}")
-    private String secretKey;
-    @Value("${application.security.jwt.expiration}")
-    private long jwtExpiration;
+    @Autowired
+    private JwtProperties jwtProperties;
 
-    public String generateToken(
-            UserDetails userDetails) {
-        return buildToken(userDetails, jwtExpiration);
+    public String generateToken(UserDetails userDetails) {
+        return buildToken(userDetails, jwtProperties.getExpiration());
     }
 
-    private String buildToken(
-            UserDetails userDetails,
-            long expiration) {
+    private String buildToken(UserDetails userDetails, long expiration) {
         return Jwts
                 .builder()
                 .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis())) 
+                .issuedAt(new Date(System.currentTimeMillis()))
                 .claim("Gustavo", 12345)
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
@@ -46,11 +40,11 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
-                final String username = extractClaim(token, Claims::getSubject);
-                return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-            } catch (JwtException | IllegalArgumentException e) {
-                throw new JwtTokenMalformedException("El token JWT no es válido.");
-            }    
+            final String username = extractClaim(token, Claims::getSubject);
+            return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtTokenMalformedException("El token JWT no es válido.");
+        }
     }
 
     private boolean isTokenExpired(String token) {
@@ -76,7 +70,6 @@ public class JwtService {
     }
 
     private SecretKey getSecretKey() {
-        SecretKey secretKeySpec = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        return secretKeySpec;
+        return Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
 }
