@@ -22,4 +22,5 @@ public interface CartService {
     public void deleteCartItem(Long id) throws CartItemNotFoundException;
 
     public void checkoutCart(Long userId) throws UserNotFoundException, CartNotFoundException;
+
 }
