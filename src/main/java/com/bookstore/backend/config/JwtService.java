@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ public class JwtService {
                 .builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis())) 
-                .claim("Gustavo", 12345)
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
                 .compact();
