@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.backend.model.CartItem;
-import com.bookstore.backend.service.CartService;
+import com.bookstore.backend.service.cart.CartService;
 
 @RestController
 public class CartController {
-    
+
     @Autowired
     private CartService cartService;
 
@@ -35,7 +36,7 @@ public class CartController {
     }
 
     @PutMapping("/carts")
-    public CartItem updateCartItem(CartItem cartItem) {
+    public CartItem updateCartItem(@RequestBody CartItem cartItem) {
         return cartService.updateCartItem(cartItem);
     }
 

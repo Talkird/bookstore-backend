@@ -9,7 +9,6 @@ import com.bookstore.backend.model.Cart;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    
     Optional<Cart> findByUserId(Long userId);
 
 }
