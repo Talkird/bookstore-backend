@@ -7,6 +7,7 @@ import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
 import com.bookstore.backend.exception.cart.CartItemNotFoundException;
 import com.bookstore.backend.exception.cart.CartNotFoundException;
+import com.bookstore.backend.exception.cart.InvalidCouponException;
 import com.bookstore.backend.model.CartItem;
 
 public interface CartService {
@@ -23,4 +24,7 @@ public interface CartService {
 
     public void checkoutCart(Long userId) throws UserNotFoundException, CartNotFoundException;
 
+    public void applyCouponToCart(Long userId, String couponCode) throws CartNotFoundException, InvalidCouponException;
+
+    public void updateCartTotal(Long userId) throws CartNotFoundException;
 }
