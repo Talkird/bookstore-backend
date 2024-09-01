@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.bookstore.backend.exceptions.JwtTokenMalformedException;
+import com.bookstore.backend.exception.auth.JwtTokenMalformedException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
