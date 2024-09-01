@@ -10,12 +10,15 @@ import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
 import com.bookstore.backend.exception.cart.CartItemNotFoundException;
 import com.bookstore.backend.exception.cart.CartNotFoundException;
+import com.bookstore.backend.exception.cart.InvalidCouponException;
 import com.bookstore.backend.model.Book;
 import com.bookstore.backend.model.Cart;
 import com.bookstore.backend.model.CartItem;
+import com.bookstore.backend.model.Discount;
 import com.bookstore.backend.model.Order;
 import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
+import com.bookstore.backend.repository.DiscountRepository;
 import com.bookstore.backend.service.book.BookService;
 import com.bookstore.backend.service.order.OrderService;
 
@@ -33,6 +36,9 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private DiscountRepository discountRepository;
 
     @Override
     public List<CartItem> getCart(Long userId) throws CartNotFoundException {
@@ -147,5 +153,31 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
+    @Override
+    public void applyCouponToCart(Long userId, String couponCode) throws CartNotFoundException, InvalidCouponException {
+        Cart cart = cartRepository.findByUserId(userId)
+                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+
+        Discount discount = discountRepository.findByCodeAndActiveTrue(couponCode)
+                                             .orElseThrow(() -> new InvalidCouponException("El cupón no es válido o no está activo."));
+
+        if (discount.isExpired()) {
+            throw new InvalidCouponException("El cupón ha expirado.");
+        }
+
+        // Asignar el descuento al carrito
+        cart.setDiscount(discount);
+        cart.updateTotal();
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public void updateCartTotal(Long userId) throws CartNotFoundException {
+        Cart cart = cartRepository.findByUserId(userId)
+                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+
+        cart.updateTotal();
+        cartRepository.save(cart);
+    }
 
 }

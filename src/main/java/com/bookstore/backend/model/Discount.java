@@ -1,14 +1,9 @@
 package com.bookstore.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-import lombok.Data;
-
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -21,13 +16,32 @@ public class Discount {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String code;
+    private String code;  // Código del cupón
 
     @Column(nullable = false)
-    private double percentage;
+    private double percentage; // Porcentaje de descuento
 
-    public Discount(String code, double percentage) {
+    @Column(nullable = false)
+    private boolean active; // Indicador de si el descuento está activo
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DiscountType discountType; // Tipo de descuento (COUPON, TWO_BOOK_DISCOUNT, etc.)
+
+    @Column(nullable = true)
+    private LocalDate expirationDate; // Fecha de expiración solo relevante para cupones
+
+    public Discount(String code, double percentage, boolean active, DiscountType discountType, LocalDate expirationDate) {
         this.code = code;
         this.percentage = percentage;
+        this.active = active;
+        this.discountType = discountType;
+        this.expirationDate = expirationDate;
     }
+
+    // Método para verificar si un cupón está caducado
+    public boolean isExpired() {
+        return expirationDate != null && LocalDate.now().isAfter(this.expirationDate);
+    }
+
 }
