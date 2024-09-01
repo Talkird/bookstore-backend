@@ -25,22 +25,24 @@ public class JwtService {
     @Value("${application.security.jwt.expiration}")
     private long jwtExpiration;
 
-    public String generateToken(
-            UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
+        System.out.println("Clave secreta utilizada: " + secretKey);
+        System.out.println("Tiempo de expiración: " + jwtExpiration);
         return buildToken(userDetails, jwtExpiration);
     }
 
-    private String buildToken(
-            UserDetails userDetails,
-            long expiration) {
+    private String buildToken(UserDetails userDetails, long expiration) {
+        String email = userDetails.getUsername();
+        System.out.println("Generando token para el email: " + email); 
         return Jwts
                 .builder()
-                .subject(userDetails.getUsername())
+                .subject(email) 
                 .issuedAt(new Date(System.currentTimeMillis())) 
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
                 .compact();
     }
+    
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {

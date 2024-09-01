@@ -110,7 +110,6 @@ public class BookServiceImpl implements BookService {
         if (books.isEmpty()) {
             throw new BookNotFoundException("No se encontraron libros del autor " + author);
         }
-        // Assuming author is always valid; otherwise, add more validation logic if needed
         return books;
     }
 
