@@ -1,4 +1,4 @@
-package com.bookstore.backend.auth;
+package com.bookstore.backend.jwt.auth;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
