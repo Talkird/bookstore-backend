@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.backend.exceptions.BookAlreadyExistsException;
@@ -22,8 +20,8 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Override
-    public Page<Book> getBooks(PageRequest pageRequest) throws BookNotFoundException {
-        Page<Book> books = bookRepository.findAll(pageRequest);
+    public List<Book> getBooks() throws BookNotFoundException {
+        List<Book> books = bookRepository.findAll();
         if (books.isEmpty()) {
             throw new BookNotFoundException("No se encontraron libros.");
         }
@@ -36,7 +34,7 @@ public class BookServiceImpl implements BookService {
             throw new BookAlreadyExistsException("Un libro con ISBN " + book.getIsbn() + " ya existe.");
         }
         
-        if (book.getPrice() <= 0) {
+        if (book.getPrice() < 0) {
             throw new InvalidBookDataException("El precio debe ser positivo.");
         }
 
@@ -66,7 +64,7 @@ public class BookServiceImpl implements BookService {
             throw new BookNotFoundException("No se encontró un libro con ID " + book.getId());
         }
 
-        if (book.getPrice() <= 0) {
+        if (book.getPrice() < 0) {
             throw new InvalidBookDataException("El precio debe ser positivo.");
         }
 
@@ -89,7 +87,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getBooksByPriceRange(double minPrice, double maxPrice) throws InvalidBookDataException {
-        if (minPrice <= 0 || maxPrice <= minPrice) {
+        if (minPrice < 0 || maxPrice <= minPrice) {
             throw new InvalidBookDataException("Rango de precios invalido.");
         }
         return bookRepository.findByPriceBetween(minPrice, maxPrice);

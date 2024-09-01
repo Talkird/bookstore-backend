@@ -44,4 +44,9 @@ public class CartController {
         cartService.deleteCartItem(id);
     }
 
+    @PostMapping("/carts/checkout/{id}")
+    public void checkoutCart(@PathVariable Long userId) {
+        cartService.checkoutCart(userId);
+    }
+
 }
