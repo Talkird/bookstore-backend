@@ -13,9 +13,11 @@ import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.Book;
 import com.bookstore.backend.model.Cart;
 import com.bookstore.backend.model.CartItem;
-import com.bookstore.backend.repository.BookRepository;
+import com.bookstore.backend.model.Order;
 import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
+import com.bookstore.backend.service.book.BookService;
+import com.bookstore.backend.service.order.OrderService;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -27,7 +29,10 @@ public class CartServiceImpl implements CartService {
     private CartItemRepository cartItemRepository;
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookService bookService;
+
+    @Autowired
+    private OrderService orderService;
 
     @Override
     public List<CartItem> getCart(Long userId) throws CartNotFoundException {
@@ -50,8 +55,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartRepository.findByUserId(userId)
                                   .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
-        Book book = bookRepository.findById(bookId)
-                                  .orElseThrow(() -> new BookNotFoundException("No se encontró el libro solicitado."));
+        Book book = bookService.getBookById(bookId);
 
         Optional<CartItem> existingCartItem = cart.getBooks()
                                                   .stream()
@@ -76,7 +80,7 @@ public class CartServiceImpl implements CartService {
             cart.getBooks().add(cartItem);
         }
 
-        bookRepository.save(book);
+        bookService.updateBook(book);
 
         cartItem.updatePrice();
         cart.updateTotal();
@@ -126,13 +130,21 @@ public class CartServiceImpl implements CartService {
                 throw new InvalidBookDataException("El libro no tiene suficiente stock.");
             }
             book.setStock(book.getStock() - cartItem.getQuantity());
-            bookRepository.save(book);
+            bookService.updateBook(book);
         }
 
         clearCart(userId);
 
-        // TODO: Crear orden de compra
+        /* 
+        Order order = new Order();
+        order.setCart(cart);
+        order.setUser(cart.getUser());
+        order.setTotal(cart.getTotal());
+        orderService.createOrder(order);
+        */
+        //TODO agregar parametros para rellenar order
 
         cartRepository.save(cart);
     }
+    
 }
