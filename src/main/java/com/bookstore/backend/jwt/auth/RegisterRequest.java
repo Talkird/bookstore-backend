@@ -1,4 +1,4 @@
-package com.bookstore.backend.auth;   
+package com.bookstore.backend.jwt.auth;   
 
 import com.bookstore.backend.model.Role;
 

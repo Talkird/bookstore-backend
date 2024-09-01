@@ -1,4 +1,4 @@
-package com.bookstore.backend.config;
+package com.bookstore.backend.jwt.config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;

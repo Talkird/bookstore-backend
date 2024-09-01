@@ -1,4 +1,4 @@
-package com.bookstore.backend.config;
+package com.bookstore.backend.jwt.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
