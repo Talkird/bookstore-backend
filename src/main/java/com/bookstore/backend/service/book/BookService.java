@@ -2,9 +2,6 @@ package com.bookstore.backend.service.book;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-
 import com.bookstore.backend.exception.book.BookAlreadyExistsException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
@@ -13,7 +10,7 @@ import com.bookstore.backend.model.Genre;
 
 public interface BookService {
 
-    public Page<Book> getBooks(PageRequest pageRequest) throws BookNotFoundException;
+    public List<Book> getBooks() throws BookNotFoundException;
 
     public Book createBook(Book book) throws BookAlreadyExistsException, InvalidBookDataException;
 

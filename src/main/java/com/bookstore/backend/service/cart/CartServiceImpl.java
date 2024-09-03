@@ -32,14 +32,16 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartItem> getCart(Long userId) throws CartNotFoundException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
         return cart.getBooks();
     }
 
     @Override
     public void clearCart(Long userId) throws CartNotFoundException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
         cart.getBooks().clear();
         cart.updateTotal();
         cartRepository.save(cart);
@@ -48,15 +50,16 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartItem addItemToCart(Long userId, Long bookId) throws BookNotFoundException, InvalidBookDataException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
         Book book = bookRepository.findById(bookId)
-                                  .orElseThrow(() -> new BookNotFoundException("No se encontró el libro solicitado."));
+                .orElseThrow(() -> new BookNotFoundException("No se encontró el libro solicitado."));
 
         Optional<CartItem> existingCartItem = cart.getBooks()
-                                                  .stream()
-                                                  .filter(item -> item.getBook().getId().equals(bookId))
-                                                  .findFirst();
+                .stream()
+                .filter(item -> item.getBook().getId().equals(bookId))
+                .findFirst();
 
         CartItem cartItem;
         if (existingCartItem.isPresent()) {
@@ -88,7 +91,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartItem updateCartItem(CartItem cartItem) throws CartItemNotFoundException {
         CartItem existingCartItem = cartItemRepository.findById(cartItem.getId())
-            .orElseThrow(() -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
 
         existingCartItem.setQuantity(cartItem.getQuantity());
         existingCartItem.setPrice(existingCartItem.getBook().getPrice() * cartItem.getQuantity());
@@ -105,7 +109,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCartItem(Long id) throws CartItemNotFoundException {
         CartItem cartItem = cartItemRepository.findById(id)
-            .orElseThrow(() -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
 
         Cart cart = cartItem.getCart();
         cart.getBooks().remove(cartItem);
@@ -118,7 +123,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public void checkoutCart(Long userId) throws CartNotFoundException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
         for (CartItem cartItem : cart.getBooks()) {
             Book book = cartItem.getBook();
