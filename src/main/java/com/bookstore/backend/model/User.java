@@ -14,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +46,9 @@ public class User implements UserDetails {
     @Column
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -69,6 +73,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    //.
+    // .
 
 }
