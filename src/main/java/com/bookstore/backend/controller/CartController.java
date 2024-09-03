@@ -3,18 +3,14 @@ package com.bookstore.backend.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookstore.backend.exception.cart.CartNotFoundException;
-import com.bookstore.backend.exception.cart.InvalidCouponException;
 import com.bookstore.backend.model.CartItem;
 import com.bookstore.backend.service.cart.CartService;
 
@@ -52,16 +48,6 @@ public class CartController {
     @PostMapping("/carts/checkout/{id}")
     public void checkoutCart(@PathVariable Long userId) {
         cartService.checkoutCart(userId);
-    }
-
-    @PostMapping("/carts/{id}/apply-coupon")
-    public ResponseEntity<String> applyCoupon(@PathVariable Long id, @RequestParam String couponCode) {
-        try {
-            cartService.applyCouponToCart(id, couponCode);
-            return ResponseEntity.ok("Cupón aplicado correctamente.");
-        } catch (InvalidCouponException | CartNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
 }
