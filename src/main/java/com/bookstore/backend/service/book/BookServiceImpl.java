@@ -31,9 +31,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book createBook(Book book) throws BookAlreadyExistsException, InvalidBookDataException {
         if (bookRepository.existsById(book.getId())) {
-            throw new BookAlreadyExistsException("Un libro con ISBN " + book.getIsbn() + " ya existe.");
+            throw new BookAlreadyExistsException("Un libro este id ya existe.");
         }
-        
+
         if (book.getPrice() < 0) {
             throw new InvalidBookDataException("El precio debe ser positivo.");
         }
@@ -43,8 +43,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBookById(Long id) throws BookNotFoundException {
-        return bookRepository.findById(id).orElseThrow(() -> 
-            new BookNotFoundException("No se encontró un libro con ID " + id));
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("No se encontró un libro con ID " + id));
     }
 
     @Override
@@ -108,7 +108,8 @@ public class BookServiceImpl implements BookService {
         if (books.isEmpty()) {
             throw new BookNotFoundException("No se encontraron libros del autor " + author);
         }
-        // Assuming author is always valid; otherwise, add more validation logic if needed
+        // Assuming author is always valid; otherwise, add more validation logic if
+        // needed
         return books;
     }
 
