@@ -13,6 +13,8 @@ import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.cart.Cart;
 import com.bookstore.backend.model.cart.CartItem;
+import com.bookstore.backend.model.order.Order;
+import com.bookstore.backend.model.order.PaymentMethod;
 import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
 import com.bookstore.backend.service.book.BookService;
@@ -124,7 +126,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void checkoutCart(Long userId) throws CartNotFoundException {
+    public void checkoutCart(Long userId, String customerName, String customerEmail, 
+    String customerPhone, String shippingAdress, PaymentMethod paymentMethod) throws CartNotFoundException {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(
                         () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
@@ -140,14 +143,17 @@ public class CartServiceImpl implements CartService {
 
         clearCart(userId);
 
-        /*
-         * Order order = new Order();
-         * order.setCart(cart);
-         * order.setUser(cart.getUser());
-         * order.setTotal(cart.getTotal());
-         * orderService.createOrder(order);
-         */
-        // TODO agregar parametros para rellenar order
+        Order order = new Order();
+        order.setCart(cart);
+        order.setUser(cart.getUser());
+        order.setTotal(cart.getTotal());
+        order.setCustomerName(customerName);
+        order.setCustomerEmail(customerEmail);
+        order.setCustomerPhone(customerPhone);
+        order.setShippingAddress(shippingAdress);
+        order.setPaymentMethod(paymentMethod);
+        orderService.createOrder(order);
+
 
         cartRepository.save(cart);
     }
