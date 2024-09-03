@@ -8,6 +8,7 @@ import com.bookstore.backend.exception.book.InvalidBookDataException;
 import com.bookstore.backend.exception.cart.CartItemNotFoundException;
 import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.cart.CartItem;
+import com.bookstore.backend.model.order.PaymentMethod;
 
 public interface CartService {
 
@@ -21,6 +22,7 @@ public interface CartService {
 
     public void deleteCartItem(Long id) throws CartItemNotFoundException;
 
-    public void checkoutCart(Long userId) throws UserNotFoundException, CartNotFoundException;
+    public void checkoutCart(Long userId, String customerName, String customerEmail, 
+    String customerPhone, String shippingAdress, PaymentMethod paymentMethod) throws UserNotFoundException, CartNotFoundException;
 
 }
