@@ -13,7 +13,6 @@ import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.Book;
 import com.bookstore.backend.model.Cart;
 import com.bookstore.backend.model.CartItem;
-import com.bookstore.backend.model.Order;
 import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
 import com.bookstore.backend.service.book.BookService;
@@ -37,14 +36,16 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartItem> getCart(Long userId) throws CartNotFoundException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
         return cart.getBooks();
     }
 
     @Override
     public void clearCart(Long userId) throws CartNotFoundException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
         cart.getBooks().clear();
         cart.updateTotal();
         cartRepository.save(cart);
@@ -53,14 +54,15 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartItem addItemToCart(Long userId, Long bookId) throws BookNotFoundException, InvalidBookDataException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
         Book book = bookService.getBookById(bookId);
 
         Optional<CartItem> existingCartItem = cart.getBooks()
-                                                  .stream()
-                                                  .filter(item -> item.getBook().getId().equals(bookId))
-                                                  .findFirst();
+                .stream()
+                .filter(item -> item.getBook().getId().equals(bookId))
+                .findFirst();
 
         CartItem cartItem;
         if (existingCartItem.isPresent()) {
@@ -92,7 +94,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartItem updateCartItem(CartItem cartItem) throws CartItemNotFoundException {
         CartItem existingCartItem = cartItemRepository.findById(cartItem.getId())
-            .orElseThrow(() -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
 
         existingCartItem.setQuantity(cartItem.getQuantity());
         existingCartItem.setPrice(existingCartItem.getBook().getPrice() * cartItem.getQuantity());
@@ -109,7 +112,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCartItem(Long id) throws CartItemNotFoundException {
         CartItem cartItem = cartItemRepository.findById(id)
-            .orElseThrow(() -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
 
         Cart cart = cartItem.getCart();
         cart.getBooks().remove(cartItem);
@@ -122,7 +126,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public void checkoutCart(Long userId) throws CartNotFoundException {
         Cart cart = cartRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
         for (CartItem cartItem : cart.getBooks()) {
             Book book = cartItem.getBook();
@@ -135,17 +140,16 @@ public class CartServiceImpl implements CartService {
 
         clearCart(userId);
 
-        /* 
-        Order order = new Order();
-        order.setCart(cart);
-        order.setUser(cart.getUser());
-        order.setTotal(cart.getTotal());
-        orderService.createOrder(order);
-        */
-        //TODO agregar parametros para rellenar order
+        /*
+         * Order order = new Order();
+         * order.setCart(cart);
+         * order.setUser(cart.getUser());
+         * order.setTotal(cart.getTotal());
+         * orderService.createOrder(order);
+         */
+        // TODO agregar parametros para rellenar order
 
         cartRepository.save(cart);
     }
-
 
 }

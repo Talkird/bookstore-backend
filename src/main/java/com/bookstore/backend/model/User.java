@@ -46,7 +46,6 @@ public class User implements UserDetails {
     @Column
     private Role role;
 
-    @Column
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
