@@ -7,7 +7,7 @@ import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
 import com.bookstore.backend.exception.cart.CartItemNotFoundException;
 import com.bookstore.backend.exception.cart.CartNotFoundException;
-import com.bookstore.backend.model.CartItem;
+import com.bookstore.backend.model.cart.CartItem;
 
 public interface CartService {
 

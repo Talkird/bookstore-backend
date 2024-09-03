@@ -1,7 +1,8 @@
 package com.bookstore.backend.service.order;
 
 import java.util.List;
-import com.bookstore.backend.model.Order;
+
+import com.bookstore.backend.model.order.Order;
 
 public interface OrderService {
     // get userId from Order object cart

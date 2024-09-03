@@ -1,4 +1,6 @@
-package com.bookstore.backend.model;
+package com.bookstore.backend.model.cart;
+
+import com.bookstore.backend.model.book.Book;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -5,8 +5,8 @@ import java.util.List;
 import com.bookstore.backend.exception.book.BookAlreadyExistsException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
-import com.bookstore.backend.model.Book;
-import com.bookstore.backend.model.Genre;
+import com.bookstore.backend.model.book.Book;
+import com.bookstore.backend.model.book.Genre;
 
 public interface BookService {
 

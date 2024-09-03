@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookstore.backend.model.Order;
+import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.service.order.OrderService;
 
 @RestController

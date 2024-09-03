@@ -3,8 +3,8 @@ package com.bookstore.backend.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bookstore.backend.model.Book;
-import com.bookstore.backend.model.Genre;
+import com.bookstore.backend.model.book.Book;
+import com.bookstore.backend.model.book.Genre;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ import com.bookstore.backend.jwt.auth.AuthenticationRequest;
 import com.bookstore.backend.jwt.auth.AuthenticationResponse;
 import com.bookstore.backend.jwt.auth.RegisterRequest;
 import com.bookstore.backend.jwt.config.JwtService;
-import com.bookstore.backend.model.User;  
+import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;

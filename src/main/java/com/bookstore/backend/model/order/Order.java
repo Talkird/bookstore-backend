@@ -1,4 +1,4 @@
-package com.bookstore.backend.model;
+package com.bookstore.backend.model.order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +10,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import java.time.LocalDateTime; // Import for date handling
+import java.time.LocalDateTime;
+
+import com.bookstore.backend.model.cart.Cart;
+import com.bookstore.backend.model.user.User;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;

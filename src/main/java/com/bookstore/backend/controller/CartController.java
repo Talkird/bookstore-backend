@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookstore.backend.model.CartItem;
+import com.bookstore.backend.model.cart.CartItem;
 import com.bookstore.backend.service.cart.CartService;
 
 @RestController

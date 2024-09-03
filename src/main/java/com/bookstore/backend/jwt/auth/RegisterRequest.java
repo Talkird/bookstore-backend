@@ -1,6 +1,6 @@
 package com.bookstore.backend.jwt.auth;   
 
-import com.bookstore.backend.model.Role;
+import com.bookstore.backend.model.user.Role;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

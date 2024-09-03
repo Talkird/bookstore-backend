@@ -1,6 +1,8 @@
-package com.bookstore.backend.model;
+package com.bookstore.backend.model.cart;
 
 import java.util.List;
+
+import com.bookstore.backend.model.user.User;
 
 import jakarta.persistence.*;
 import lombok.Data;

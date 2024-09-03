@@ -1,4 +1,4 @@
-package com.bookstore.backend.model;
+package com.bookstore.backend.model.discounts;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

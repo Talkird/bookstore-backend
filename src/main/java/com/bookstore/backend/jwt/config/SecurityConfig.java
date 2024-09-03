@@ -29,7 +29,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll() // Registro, login, etc.
                         .requestMatchers("/error/**").permitAll() // Páginas de error
                         .requestMatchers("/public/**").permitAll() // Recursos públicos como imágenes, CSS, etc.
-                        // Endpoints de categorías, solo accesibles por usuarios autenticados
+                        .requestMatchers("/books/**").permitAll() // Endpoints de categorías, solo accesibles por
+                                                                  // usuarios autenticados
                         .requestMatchers("/categories/**").hasAnyAuthority("USER", "ADMIN")
                         // Endpoints de carrito de compras, solo para usuarios con rol USER
                         .requestMatchers("/cart/**").hasAuthority("USER")

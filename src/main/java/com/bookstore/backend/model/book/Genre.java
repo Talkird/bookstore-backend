@@ -1,4 +1,4 @@
-package com.bookstore.backend.model;
+package com.bookstore.backend.model.book;
 
 public enum Genre {
     NOVELA,

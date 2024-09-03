@@ -1,6 +1,7 @@
 package com.bookstore.backend.model.dto;
 
-import com.bookstore.backend.model.Role;
+import com.bookstore.backend.model.user.Role;
+
 import lombok.Data;
 
 @Data

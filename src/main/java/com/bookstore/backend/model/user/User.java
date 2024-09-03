@@ -1,4 +1,4 @@
-package com.bookstore.backend.model;
+package com.bookstore.backend.model.user;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.bookstore.backend.model.order.Order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

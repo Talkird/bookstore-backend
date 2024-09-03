@@ -1,6 +1,6 @@
 package com.bookstore.backend.model.dto;
 
-import com.bookstore.backend.model.Genre;
+import com.bookstore.backend.model.book.Genre;
 
 import lombok.Data;
 

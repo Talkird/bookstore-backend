@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookstore.backend.model.Book;
+import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.service.book.BookService;
 
 @RestController
