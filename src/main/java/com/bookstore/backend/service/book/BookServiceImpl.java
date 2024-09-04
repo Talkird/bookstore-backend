@@ -30,10 +30,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book createBook(Book book) throws BookAlreadyExistsException, InvalidBookDataException {
-        if (bookRepository.existsById(book.getId())) {
-            throw new BookAlreadyExistsException("Un libro este id ya existe.");
-        }
-
         if (book.getPrice() < 0) {
             throw new InvalidBookDataException("El precio debe ser positivo.");
         }

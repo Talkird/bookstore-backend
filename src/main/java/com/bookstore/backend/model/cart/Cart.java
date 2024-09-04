@@ -18,7 +18,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> books;
 
     @OneToOne
@@ -28,7 +28,7 @@ public class Cart {
     @Column
     private double total;
 
-    public void updateTotal() {
+   public void updateTotal() {
         this.total = 0;
         for (CartItem cartItem : books) {
             total += cartItem.getPrice() * cartItem.getQuantity();

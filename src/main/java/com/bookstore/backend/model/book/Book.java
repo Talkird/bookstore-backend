@@ -42,12 +42,15 @@ public class Book {
     private int stock;
 
     // TODO ver clase profe
-    @Lob
-    @Column(nullable = false)
-    private byte[] picture;
+    //@Lob
+    //@Column(nullable = false)
+    //private byte[] picture;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Genre genre;
+
+    @Column(nullable=false)
+    private String description;
 
 }
