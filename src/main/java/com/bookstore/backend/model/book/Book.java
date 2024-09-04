@@ -1,5 +1,9 @@
 package com.bookstore.backend.model.book;
 
+import java.util.List;
+
+import com.bookstore.backend.model.rating.Rating;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -41,7 +46,6 @@ public class Book {
     @Column(nullable = false)
     private int stock;
 
-    // TODO ver clase profe
     @Lob
     @Column(nullable = false)
     private byte[] picture;
@@ -50,4 +54,21 @@ public class Book {
     @Column(nullable = false)
     private Genre genre;
 
+    @OneToMany(mappedBy = "book")
+    private List<Rating> ratings;
+
+    @Column
+    private double averageRating;
+
+    public void updateAverageRating() {
+        if (ratings == null || ratings.isEmpty())
+            this.averageRating = 0.0;
+    
+        int total = 0;
+        for (Rating rating : ratings) {
+            total += rating.getRating();
+        }
+    
+        this.averageRating = (double) total / ratings.size();
+    }    
 }

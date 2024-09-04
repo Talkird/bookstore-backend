@@ -68,6 +68,15 @@ public class AuthenticationService {
                 return AuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .build();
-            }
+        }
 
+        public User getUserByEmail(String email) {
+                return repository.findByEmail(email)
+                                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el correo: " + email));
+        }
+
+        public User getUserById(Long id) {
+                return repository.findById(id)
+                                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el id: " + id));
+        }
 }
