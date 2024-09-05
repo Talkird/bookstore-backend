@@ -11,7 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
@@ -46,29 +45,32 @@ public class Book {
     @Column(nullable = false)
     private int stock;
 
-    @Lob
+    /*@Lob
     @Column(nullable = false)
-    private byte[] picture;
+    private byte[] picture;*/
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Genre genre;
 
+    @Column(nullable=false)
+    private String description;
+
     @OneToMany(mappedBy = "book")
     private List<Rating> ratings;
 
     @Column
-    private double averageRating;
+    private double rating;
 
     public void updateAverageRating() {
         if (ratings == null || ratings.isEmpty())
-            this.averageRating = 0.0;
+            this.rating = 0.0;
     
         int total = 0;
-        for (Rating rating : ratings) {
-            total += rating.getRating();
+        for (Rating r: ratings) {
+            total += r.getRating();
         }
     
-        this.averageRating = (double) total / ratings.size();
+        this.rating = (double) total / ratings.size();
     }    
 }
