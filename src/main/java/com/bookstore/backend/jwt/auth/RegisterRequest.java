@@ -2,7 +2,6 @@ package com.bookstore.backend.jwt.auth;
 
 import com.bookstore.backend.model.user.Role;
 
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,14 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
 
-    @NotBlank 
-    private String username;  
+    private String name;  
 
-    @Email 
     private String email;
 
-    @NotBlank
-    @Size(min=6)
     private String password;
 
     private Role role;
