@@ -35,6 +35,9 @@ public class Book {
     private String author;
 
     @Column
+    private Long isbn;
+
+    @Column
     private int year;
 
     @Positive(message = "Price must be positive")
@@ -45,15 +48,18 @@ public class Book {
     @Column(nullable = false)
     private int stock;
 
-    /*@Lob
-    @Column(nullable = false)
-    private byte[] picture;*/
+    /*
+     * @Lob
+     * 
+     * @Column(nullable = false)
+     * private byte[] picture;
+     */
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Genre genre;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String description;
 
     @OneToMany(mappedBy = "book")
@@ -65,12 +71,12 @@ public class Book {
     public void updateAverageRating() {
         if (ratings == null || ratings.isEmpty())
             this.rating = 0.0;
-    
+
         int total = 0;
-        for (Rating r: ratings) {
+        for (Rating r : ratings) {
             total += r.getRating();
         }
-    
+
         this.rating = (double) total / ratings.size();
-    }    
+    }
 }
