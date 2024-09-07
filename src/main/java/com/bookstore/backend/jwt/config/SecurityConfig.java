@@ -28,8 +28,8 @@ public class SecurityConfig {
                         // Endpoints públicos y de error
                         .requestMatchers("/api/v1/auth/**").permitAll() // Registro, login, etc.
                         // CRUD de libros
-                        .requestMatchers("/books/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/books/all").hasAnyAuthority("USER")
+                        .requestMatchers("/books/all", "/books/{id}").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/books/create", "/books/edit/**", "/books/delete/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
