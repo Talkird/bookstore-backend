@@ -16,7 +16,7 @@ public interface CartService {
     
     public void clearCart(Long userId) throws UserNotFoundException, CartNotFoundException;
 
-    public CartItem addItemToCart(Long userId, Long bookId) throws UserNotFoundException, BookNotFoundException, InvalidBookDataException;
+    public CartItem addItemToCart(Long userId, Long bookId, int quantity) throws UserNotFoundException, BookNotFoundException, InvalidBookDataException;
 
     public CartItem updateCartItem(CartItem cartItem) throws CartItemNotFoundException;
 
