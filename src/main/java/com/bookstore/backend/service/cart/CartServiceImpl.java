@@ -54,12 +54,16 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem addItemToCart(Long userId, Long bookId) throws BookNotFoundException, InvalidBookDataException {
+    public CartItem addItemToCart(Long userId, Long bookId, int quantity) throws BookNotFoundException, InvalidBookDataException {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(
                         () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
         Book book = bookService.getBookById(bookId);
+
+        if (book.getStock() < quantity) {
+            throw new InvalidBookDataException("El libro no tiene suficiente stock.");
+        }
 
         Optional<CartItem> existingCartItem = cart.getBooks()
                 .stream()
@@ -69,14 +73,9 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem;
         if (existingCartItem.isPresent()) {
             cartItem = existingCartItem.get();
-            if (book.getStock() <= 0) {
-                throw new InvalidBookDataException("El libro no tiene suficiente stock.");
-            }
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            
         } else {
-            if (book.getStock() <= 0) {
-                throw new InvalidBookDataException("El libro no tiene suficiente stock.");
-            }
             cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setBook(book);

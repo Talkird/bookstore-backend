@@ -32,8 +32,8 @@ public class CartController {
     }
 
     @PostMapping("/carts/{id}")
-    public CartItem addCartItem(@PathVariable Long userId, Long bookId) {
-        return cartService.addItemToCart(userId, bookId);
+    public CartItem addCartItem(@PathVariable Long userId, Long bookId, int quantity) {
+        return cartService.addItemToCart(userId, bookId, quantity);
     }
 
     @PutMapping("/carts")
