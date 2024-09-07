@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/public/**").permitAll() // Recursos públicos como imágenes, CSS, etc.
                         .requestMatchers("/books/**").permitAll() // Endpoints de categorías, solo accesibles por
                                                                   // usuarios autenticados
+                        .requestMatchers("/images").permitAll()
                         .requestMatchers("/categories/**").hasAnyAuthority("USER", "ADMIN")
                         // Endpoints de carrito de compras, solo para usuarios con rol USER
                         .requestMatchers("/cart/**").hasAuthority("USER")

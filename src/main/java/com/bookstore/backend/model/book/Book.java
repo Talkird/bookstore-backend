@@ -2,8 +2,10 @@ package com.bookstore.backend.model.book;
 
 import java.util.List;
 
+import com.bookstore.backend.model.image.Image;
 import com.bookstore.backend.model.rating.Rating;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,7 +13,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -48,6 +52,11 @@ public class Book {
     /*@Lob
     @Column(nullable = false)
     private byte[] picture;*/
+
+    // Relación con Image
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image; // Nueva relación con la clase Image
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
