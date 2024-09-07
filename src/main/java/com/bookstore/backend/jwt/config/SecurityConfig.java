@@ -2,6 +2,7 @@ package com.bookstore.backend.jwt.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,6 +10,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.bookstore.backend.model.user.Role;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,28 +28,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        // Endpoints públicos y de error
                         .requestMatchers("/api/v1/auth/**").permitAll() // Registro, login, etc.
-                        .requestMatchers("/error/**").permitAll() // Páginas de error
-                        .requestMatchers("/public/**").permitAll() // Recursos públicos como imágenes, CSS, etc.
-                        .requestMatchers("/books/**").permitAll() // Endpoints de categorías, solo accesibles por
-                                                                  // usuarios autenticados
-                        .requestMatchers("/categories/**").hasAnyAuthority("USER", "ADMIN")
-                        // Endpoints de carrito de compras, solo para usuarios con rol USER
-                        .requestMatchers("/cart/**").hasAuthority("USER")
-                        // Endpoint de historial de pedidos, solo accesible por usuarios con rol USER
-                        .requestMatchers("/orders/history/**").hasAuthority("USER")
-                        // Endpoints de administración, solo accesibles por usuarios con rol ADMIN
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/admin/products/**").hasAuthority("ADMIN")
-                        .requestMatchers("/admin/users/**").hasAuthority("ADMIN")
-                        // Endpoint de perfil, solo para el usuario autenticado
-                        .requestMatchers("/profile/**").authenticated()
-                        // Endpoint para finalizar compra, accesible solo por usuarios con rol USER
-                        .requestMatchers("/checkout/**").hasAuthority("USER")
-                        // API interna, solo accesible por usuarios con rol ADMIN
-                        .requestMatchers("/api/internal/**").hasAuthority("ADMIN")
-                        // Otros endpoints requieren autenticación
+                        .requestMatchers(HttpMethod.GET,"/books/**").hasAnyAuthority(Role.USER.name()) 
+                        .requestMatchers("/books/**").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/cart/**").hasAnyAuthority(Role.USER.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
