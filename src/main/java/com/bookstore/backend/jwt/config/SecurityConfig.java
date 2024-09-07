@@ -30,6 +30,8 @@ public class SecurityConfig {
                         // CRUD de libros
                         .requestMatchers("/books/all", "/books/{id}").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/books/create", "/books/edit/**", "/books/delete/**").hasAuthority("ADMIN")
+                        // CRUD de carritos
+                        .requestMatchers("/carts/**").permitAll() //.hasAuthority("USER")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
