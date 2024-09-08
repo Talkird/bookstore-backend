@@ -6,10 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
 import com.bookstore.backend.exception.InvalidDiscountException;
-=======
->>>>>>> 7c7f9407788c2fe790c5c9f3c668db30327e2adf
 import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
@@ -155,14 +152,14 @@ public class CartServiceImpl implements CartService {
             totalPrice = totalPrice * 0.9;  // 10% de descuento si hay más de 5 productos
         }
 
-        // Aplicar descuento por código de descuento
-        /*if (discountCode != null && !discountCode.isEmpty()) {
+        //Aplicar descuento por código de descuento
+        if (discountCode != null && !discountCode.isEmpty()) {
             try {
                 totalPrice = discountService.applyDiscount(discountCode, totalPrice);
             } catch (InvalidDiscountException e) {
                 System.out.println(e.getMessage());
             }
-        }*/
+        }
 
         // Aplicar descuento por método de pago (ejemplo: tarjeta de crédito tiene 5% de descuento)
         if (paymentMethod == PaymentMethod.CREDIT_CARD) {
