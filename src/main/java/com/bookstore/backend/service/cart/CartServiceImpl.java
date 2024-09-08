@@ -21,7 +21,7 @@ import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
 import com.bookstore.backend.service.book.BookService;
 import com.bookstore.backend.service.discount.DiscountService;
-import com.bookstore.backend.service.discount.DiscountServiceImpl;
+//import com.bookstore.backend.service.discount.DiscountServiceImpl;
 import com.bookstore.backend.service.order.OrderService;
 
 @Service
@@ -40,7 +40,7 @@ public class CartServiceImpl implements CartService {
     private OrderService orderService;
 
     @Autowired
-    private DiscountServiceImpl discountService;
+    private DiscountService discountService;
 
     @Override
     public List<CartItem> getCart(Long userId) throws CartNotFoundException {
@@ -152,13 +152,13 @@ public class CartServiceImpl implements CartService {
         }
 
         // Aplicar descuento por código de descuento
-        if (discountCode != null && !discountCode.isEmpty()) {
+        /*if (discountCode != null && !discountCode.isEmpty()) {
             try {
                 totalPrice = discountService.applyDiscount(discountCode, totalPrice);
             } catch (InvalidDiscountException e) {
                 System.out.println(e.getMessage());
             }
-        }
+        }*/
 
         // Aplicar descuento por método de pago (ejemplo: tarjeta de crédito tiene 5% de descuento)
         if (paymentMethod == PaymentMethod.CREDIT_CARD) {
