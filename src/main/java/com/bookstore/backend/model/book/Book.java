@@ -49,10 +49,6 @@ public class Book {
     @Column(nullable = false)
     private int stock;
 
-    /*@Lob
-    @Column(nullable = false)
-    private byte[] picture;*/
-
     // Relación con Image
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id", referencedColumnName = "id")
@@ -62,7 +58,7 @@ public class Book {
     @Column(nullable = false)
     private Genre genre;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String description;
 
     @OneToMany(mappedBy = "book")
@@ -74,12 +70,12 @@ public class Book {
     public void updateAverageRating() {
         if (ratings == null || ratings.isEmpty())
             this.rating = 0.0;
-    
+
         int total = 0;
-        for (Rating r: ratings) {
+        for (Rating r : ratings) {
             total += r.getRating();
         }
-    
+
         this.rating = (double) total / ratings.size();
-    }    
+    }
 }

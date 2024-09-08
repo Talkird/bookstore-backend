@@ -1,6 +1,5 @@
 package com.bookstore.backend.service.image;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class ImageServiceImpl implements ImageService {
     private ImageRepository imageRepository;
 
     @Override
-    @Transactional  // Asegura que el método funcione dentro de una transacción
+    @Transactional // Asegura que el método funcione dentro de una transacción
     public Image create(Image image) {
         return imageRepository.save(image);
     }

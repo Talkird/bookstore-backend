@@ -6,13 +6,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bookstore.backend.dto.auth.AuthenticationRequest;
+import com.bookstore.backend.dto.auth.AuthenticationResponse;
+import com.bookstore.backend.dto.auth.RegisterRequest;
 import com.bookstore.backend.exception.auth.EmailAlreadyExistsException;
 import com.bookstore.backend.exception.auth.InvalidCredentialsException;
 import com.bookstore.backend.exception.auth.UserNotFoundException;
-import com.bookstore.backend.jwt.auth.AuthenticationRequest;
-import com.bookstore.backend.jwt.auth.AuthenticationResponse;
-import com.bookstore.backend.jwt.auth.RegisterRequest;
-import com.bookstore.backend.jwt.config.JwtService;
+import com.bookstore.backend.jwt.JwtService;
 import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.UserRepository;
 

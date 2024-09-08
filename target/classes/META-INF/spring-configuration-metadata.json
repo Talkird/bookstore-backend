@@ -2,20 +2,20 @@
   "groups": [
     {
       "name": "application.security.jwt",
-      "type": "com.bookstore.backend.jwt.config.JwtProperties",
-      "sourceType": "com.bookstore.backend.jwt.config.JwtProperties"
+      "type": "com.bookstore.backend.jwt.JwtProperties",
+      "sourceType": "com.bookstore.backend.jwt.JwtProperties"
     }
   ],
   "properties": [
     {
       "name": "application.security.jwt.expiration",
       "type": "java.lang.Long",
-      "sourceType": "com.bookstore.backend.jwt.config.JwtProperties"
+      "sourceType": "com.bookstore.backend.jwt.JwtProperties"
     },
     {
       "name": "application.security.jwt.secret-key",
       "type": "java.lang.String",
-      "sourceType": "com.bookstore.backend.jwt.config.JwtProperties"
+      "sourceType": "com.bookstore.backend.jwt.JwtProperties"
     }
   ],
   "hints": []

@@ -25,9 +25,8 @@ public class Image {
 
     private Blob image;
 
-    private Date date = new Date();
+    private Date date;
 
-    // Relación con Book
     @OneToOne(mappedBy = "image")
-    private Book book; // Relación inversa opcional
+    private Book book;
 }
