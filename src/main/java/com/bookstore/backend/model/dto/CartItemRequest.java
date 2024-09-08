@@ -4,9 +4,6 @@ import lombok.Data;
 
 @Data
 public class CartItemRequest {
-    private Long id;
-    private CartRequest cart;
-    private BookRequest book;
+    private Long bookId;
     private int quantity;
-    private double price;
 }

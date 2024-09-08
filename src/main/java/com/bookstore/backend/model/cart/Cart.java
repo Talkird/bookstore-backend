@@ -31,7 +31,7 @@ public class Cart {
     public void updateTotal() {
         this.total = 0;
         for (CartItem cartItem : books) {
-            total += cartItem.getPrice() * cartItem.getQuantity();
+            total += cartItem.getPrice();
         }
     }
 

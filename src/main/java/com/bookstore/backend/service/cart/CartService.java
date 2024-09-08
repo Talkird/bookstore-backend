@@ -23,7 +23,7 @@ public interface CartService {
 
     public CartItem updateCartItem(CartItem cartItem) throws CartItemNotFoundException;
 
-    public void deleteCartItem(Long id) throws CartItemNotFoundException;
+    public void deleteCartItem(Long id, Long userId) throws CartItemNotFoundException;
 
     public void checkoutCart(Long userId, String customerName, String customerEmail, 
     String customerPhone, String shippingAdress, PaymentMethod paymentMethod, String discountCode) throws UserNotFoundException, CartNotFoundException;

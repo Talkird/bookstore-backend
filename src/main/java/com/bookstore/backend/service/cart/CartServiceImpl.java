@@ -123,14 +123,21 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCartItem(Long id) throws CartItemNotFoundException {
+    public void deleteCartItem(Long id, Long userId) throws CartItemNotFoundException{
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(
-                        () -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
+                .orElseThrow(() -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
 
         Cart cart = cartItem.getCart();
+
         cart.getBooks().remove(cartItem);
         cart.updateTotal();
+
+        int quantity = cartItem.getQuantity();
+        Book book = cartItem.getBook();
+        
+
+        book.setStock(book.getStock() + quantity);
+        bookService.updateBook(book);
 
         cartItemRepository.delete(cartItem);
         cartRepository.save(cart);
