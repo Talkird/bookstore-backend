@@ -6,7 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
 import com.bookstore.backend.exception.InvalidDiscountException;
+=======
+>>>>>>> 7c7f9407788c2fe790c5c9f3c668db30327e2adf
 import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
@@ -17,6 +20,7 @@ import com.bookstore.backend.model.cart.Cart;
 import com.bookstore.backend.model.cart.CartItem;
 import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.model.order.PaymentMethod;
+import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
 import com.bookstore.backend.service.book.BookService;
@@ -191,6 +195,13 @@ public class CartServiceImpl implements CartService {
         orderService.createOrder(order);
 
         cartRepository.save(cart);;
+    }
+    
+    @Override
+    public void createCart(User user) throws UserNotFoundException {
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
     }
 
 
