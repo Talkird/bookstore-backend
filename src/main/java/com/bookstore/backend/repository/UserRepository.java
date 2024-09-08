@@ -1,6 +1,5 @@
 package com.bookstore.backend.repository;
 
-
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +10,7 @@ import com.bookstore.backend.model.user.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @SuppressWarnings("null")
     Optional<User> findById(Long id);
 
     Optional<User> findByEmail(String email);
