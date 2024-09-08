@@ -27,7 +27,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         // Endpoints públicos y de error
                         .requestMatchers("/api/v1/auth/**").permitAll() // Registro, login, etc.
-                        .anyRequest().authenticated())
+                        .anyRequest()
+                        .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
