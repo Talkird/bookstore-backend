@@ -1,5 +1,6 @@
 package com.bookstore.backend.service.auth; 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,7 @@ import com.bookstore.backend.jwt.auth.RegisterRequest;
 import com.bookstore.backend.jwt.config.JwtService;
 import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.UserRepository;
+import com.bookstore.backend.service.cart.CartService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +28,9 @@ public class AuthenticationService {
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
+
+        @Autowired
+        private CartService cartService;
 
         public AuthenticationResponse register(RegisterRequest request) {
                         if (repository.existsByEmail(request.getEmail())) {
@@ -40,6 +45,7 @@ public class AuthenticationService {
                                 .build();
 
                 repository.save(user);
+                cartService.createCart(user);
                 var jwtToken = jwtService.generateToken(user);
                 return AuthenticationResponse.builder()
                                 .accessToken(jwtToken)
