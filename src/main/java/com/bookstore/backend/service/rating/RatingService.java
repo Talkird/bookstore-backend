@@ -2,17 +2,19 @@ package com.bookstore.backend.service.rating;
 
 import java.util.List;
 
+import com.bookstore.backend.exception.auth.UserNotFoundException;
+import com.bookstore.backend.exception.book.BookNotFoundException;
+import com.bookstore.backend.exception.rating.RatingNotFoundException;
 import com.bookstore.backend.model.rating.Rating;
 
 public interface RatingService {
+    Rating updateOrCreateRating(Long userId, Long bookId, int ratingValue) throws UserNotFoundException, BookNotFoundException;
 
-    public Rating updateOrCreateRating(Long userId, Long bookId, int ratingValue);
+    List<Rating> getRatingsByBook(Long bookId) throws BookNotFoundException;
 
-    public List<Rating> getRatingsByBook(Long bookId);
+    List<Rating> getRatingsByUser(Long userId) throws UserNotFoundException;
 
-    public List<Rating> getRatingsByUser(Long userId);
+    Rating getRatingByUserAndBook(Long userId, Long bookId) throws RatingNotFoundException;
 
-    public Rating getRatingByUserAndBook(Long userId, Long bookId);
-
-    public void deleteRating(Long ratingId);
+    void deleteRating(Long ratingId) throws RatingNotFoundException, BookNotFoundException;
 }

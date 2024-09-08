@@ -85,4 +85,8 @@ public class AuthenticationService {
                 return repository.findById(id)
                                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el id: " + id));
         }
+
+        public void updateUser(User user) {
+                repository.save(user);
+        }
 }
