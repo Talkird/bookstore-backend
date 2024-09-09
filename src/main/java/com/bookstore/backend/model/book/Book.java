@@ -2,6 +2,7 @@ package com.bookstore.backend.model.book;
 
 import java.util.List;
 
+import com.bookstore.backend.model.image.Image;
 import com.bookstore.backend.model.rating.Rating;
 
 import jakarta.persistence.Column;
@@ -11,12 +12,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @Entity
@@ -67,6 +71,11 @@ public class Book {
 
     @Column
     private double rating;
+
+    // Relación con la tabla de imágenes
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     public void updateAverageRating() {
         if (ratings == null || ratings.isEmpty())
