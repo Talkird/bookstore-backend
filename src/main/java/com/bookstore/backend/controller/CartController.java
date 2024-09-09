@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.backend.model.cart.CartItem;
 import com.bookstore.backend.model.dto.CartItemRequest;
+import com.bookstore.backend.model.dto.OrderRequest;
 import com.bookstore.backend.model.order.PaymentMethod;
 import com.bookstore.backend.service.cart.CartService;
 
@@ -52,10 +53,11 @@ public class CartController {
     }
 
     //VER QUE FUNCIONE
-    @PostMapping("/carts/checkout/{id}")
-    public void checkoutCart(@PathVariable Long userId, String customerName, String customerEmail, 
-    String customerPhone, String shippingAdress, PaymentMethod paymentMethod, @RequestParam(required = false) String discountCode) {
-        cartService.checkoutCart(userId, customerName, customerEmail, customerPhone, shippingAdress, paymentMethod, discountCode);
+    @PostMapping("/carts/checkout/{userId}")
+    public void checkoutCart(@PathVariable Long userId, @RequestBody OrderRequest orderRequest, @RequestParam(required = false) String discountCode) {
+        cartService.checkoutCart(userId, orderRequest.getCustomerName(), orderRequest.getCustomerEmail(), 
+                                orderRequest.getCustomerPhone(), orderRequest.getShippingAddress(), 
+                                orderRequest.getPaymentMethod(), discountCode);
     }
 
 }

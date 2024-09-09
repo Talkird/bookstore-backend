@@ -1,5 +1,7 @@
 package com.bookstore.backend.service.cart;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.cart.Cart;
 import com.bookstore.backend.model.cart.CartItem;
 import com.bookstore.backend.model.order.Order;
+import com.bookstore.backend.model.order.OrderStatus;
 import com.bookstore.backend.model.order.PaymentMethod;
 import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.CartItemRepository;
@@ -147,9 +150,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void checkoutCart(Long userId, String customerName, String customerEmail, String customerPhone,
-            String shippingAdress, PaymentMethod paymentMethod, String discountCode) throws UserNotFoundException, CartNotFoundException {
+            String shippingAddress, PaymentMethod paymentMethod, String discountCode) throws UserNotFoundException, CartNotFoundException {
                 Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+
+                System.out.println("Nombre del cliente: " + customerEmail);
+                System.out.println("Email del cliente: " + customerName);
+                System.out.println("Teléfono del cliente: " + customerPhone);
+                System.out.println("Dirección de envío: " + shippingAddress);
 
         double totalPrice = cart.getTotal();
 
@@ -174,14 +182,14 @@ public class CartServiceImpl implements CartService {
         }
 
         // Verificar stock y actualizar inventario
-        for (CartItem cartItem : cart.getBooks()) {
+        /*for (CartItem cartItem : cart.getBooks()) {
             Book book = cartItem.getBook();
             if (book.getStock() < cartItem.getQuantity()) {
                 throw new InvalidBookDataException("El libro no tiene suficiente stock.");
             }
             book.setStock(book.getStock() - cartItem.getQuantity());
             bookService.updateBook(book);
-        }
+        }*/
 
         // Limpiar el carrito
         clearCart(userId);
@@ -194,8 +202,10 @@ public class CartServiceImpl implements CartService {
         order.setCustomerName(customerName);
         order.setCustomerEmail(customerEmail);
         order.setCustomerPhone(customerPhone);
-        order.setShippingAddress(shippingAdress);
+        order.setShippingAddress(shippingAddress);
         order.setPaymentMethod(paymentMethod);
+        order.setDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.PENDING);
         orderService.createOrder(order);
 
         cartRepository.save(cart);;
