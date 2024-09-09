@@ -12,4 +12,8 @@ public interface OrderService {
     public Order createOrder(Order order);
 
     public Order getOrderById(Long orderId) throws OrderNotFoundException;
+
+    public void deleteOrder(Long orderId) throws OrderNotFoundException;
+
+    public Order updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException;
 }
