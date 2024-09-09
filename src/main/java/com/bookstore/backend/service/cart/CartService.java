@@ -8,6 +8,7 @@ import com.bookstore.backend.exception.book.InvalidBookDataException;
 import com.bookstore.backend.exception.cart.CartItemNotFoundException;
 import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.cart.CartItem;
+import com.bookstore.backend.model.dto.CartItemRequest;
 import com.bookstore.backend.model.order.PaymentMethod;
 import com.bookstore.backend.model.user.User;
 
@@ -15,7 +16,7 @@ public interface CartService {
 
     public void createCart(User user) throws UserNotFoundException;
 
-    public List<CartItem> getCart(Long userId) throws CartNotFoundException;
+    public List<CartItemRequest> getCart(Long userId) throws CartNotFoundException;
     
     public void clearCart(Long userId) throws UserNotFoundException, CartNotFoundException;
 

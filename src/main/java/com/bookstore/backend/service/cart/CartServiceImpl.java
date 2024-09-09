@@ -1,9 +1,9 @@
 package com.bookstore.backend.service.cart;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.cart.Cart;
 import com.bookstore.backend.model.cart.CartItem;
+import com.bookstore.backend.model.dto.CartItemRequest;
 import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.model.order.OrderStatus;
 import com.bookstore.backend.model.order.PaymentMethod;
@@ -25,7 +26,6 @@ import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
 import com.bookstore.backend.service.book.BookService;
 import com.bookstore.backend.service.discount.DiscountService;
-//import com.bookstore.backend.service.discount.DiscountServiceImpl;
 import com.bookstore.backend.service.order.OrderService;
 
 @Service
@@ -47,12 +47,21 @@ public class CartServiceImpl implements CartService {
     private DiscountService discountService;
 
     @Override
-    public List<CartItem> getCart(Long userId) throws CartNotFoundException {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(
-                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
-        return cart.getBooks();
-    }
+    public List<CartItemRequest> getCart(Long userId) throws CartNotFoundException {
+    Cart cart = cartRepository.findByUserId(userId)
+            .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+    
+    // Convertir cada CartItem en un CartItemResponse
+    return cart.getBooks().stream().map((CartItem cartItem) -> 
+        new CartItemRequest(
+            cartItem.getBook().getId(),
+            cartItem.getBook().getTitle(),
+            cartItem.getBook().getAuthor(),
+            cartItem.getQuantity(),
+            cartItem.getBook().getPrice() * cartItem.getQuantity()
+        )
+    ).collect(Collectors.toList());
+}
 
     @Override
     public void clearCart(Long userId) throws CartNotFoundException {
