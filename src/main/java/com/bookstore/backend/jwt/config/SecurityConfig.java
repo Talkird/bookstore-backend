@@ -28,7 +28,7 @@ public class SecurityConfig {
                         // Endpoints públicos y de error
                         .requestMatchers("/api/v1/auth/**").permitAll() // Registro, login, etc.
                         .requestMatchers("/carts/**").permitAll()
-                        .requestMatchers("/books/**").permitAll()
+                        .requestMatchers("/books/**").permitAll() //todo xq no esta en branch
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
