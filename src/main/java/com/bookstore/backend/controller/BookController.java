@@ -54,28 +54,28 @@ public class BookController {
         bookService.deleteBook(id);
     }
 
-    //ALL
+    //ALL 
     @GetMapping("/genre/{genre}")
     public List<Book> getBooksByGenre(@PathVariable("genre") String genreString) {
         Genre genre = Genre.fromString(genreString);
         return bookService.getBookByGenre(genre);
     }
 
-    //ALL
+    //ALL ver
     @GetMapping("/price-range")
     public List<Book> getBooksByPriceRange(@RequestParam double minPrice, @RequestParam double maxPrice) {
         return bookService.getBooksByPriceRange(minPrice, maxPrice);
     }
 
-    //ALL
-    @GetMapping("/title")
-    public List<Book> getBooksByTitle(@RequestParam String title) {
+    //ALL 
+    @GetMapping("/title/{title}")
+    public List<Book> getBooksByTitle(@PathVariable("title") String title) {
         return bookService.getBooksByTitle(title);
     }
 
-    //ALL
-    @GetMapping("/author")
-    public List<Book> getBooksByAuthor(@RequestParam String author) {
+    //ALL 
+    @GetMapping("/author/{author}")
+    public List<Book> getBooksByAuthor(@PathVariable("author") String author) {
         return bookService.getBooksByAuthor(author);
     }
 
