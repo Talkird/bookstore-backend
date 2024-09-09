@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/carts/**").permitAll()
                         .requestMatchers("/books/**").permitAll()
                         .requestMatchers("/orders/**").permitAll()
+                        .requestMatchers( "/images/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
