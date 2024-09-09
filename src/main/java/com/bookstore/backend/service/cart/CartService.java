@@ -22,7 +22,7 @@ public interface CartService {
 
     public CartItem addItemToCart(Long userId, Long bookId, int quantity) throws UserNotFoundException, BookNotFoundException, InvalidBookDataException;
 
-    public CartItem updateCartItem(Long id,Long bookId,int quantity) throws CartItemNotFoundException,InvalidBookDataException;
+    public CartItem updateCartItem(Long userId,Long id,Long bookId,int quantity) throws CartItemNotFoundException,InvalidBookDataException;
 
     public void deleteCartItem(Long id, Long userId) throws CartItemNotFoundException;
 
