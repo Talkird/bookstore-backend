@@ -54,10 +54,10 @@ public class CartController {
 
     //VER QUE FUNCIONE
     @PostMapping("/carts/checkout/{userId}")
-    public void checkoutCart(@PathVariable Long userId, @RequestBody OrderRequest orderRequest, @RequestParam(required = false) String discountCode) {
+    public void checkoutCart(@PathVariable Long userId, @RequestBody OrderRequest orderRequest) {
         cartService.checkoutCart(userId, orderRequest.getCustomerName(), orderRequest.getCustomerEmail(), 
                                 orderRequest.getCustomerPhone(), orderRequest.getShippingAddress(), 
-                                orderRequest.getPaymentMethod(), discountCode);
+                                orderRequest.getPaymentMethod(), orderRequest.getDiscountCode());
     }
 
 }

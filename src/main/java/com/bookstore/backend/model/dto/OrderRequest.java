@@ -11,4 +11,5 @@ public class OrderRequest {
     private String customerPhone;
     private String shippingAddress;
     private PaymentMethod paymentMethod;
+    private String discountCode;
 }

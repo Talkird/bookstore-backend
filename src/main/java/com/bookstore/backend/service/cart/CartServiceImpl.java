@@ -159,13 +159,16 @@ public class CartServiceImpl implements CartService {
                 System.out.println("Teléfono del cliente: " + customerPhone);
                 System.out.println("Dirección de envío: " + shippingAddress);
 
+
         double totalPrice = cart.getTotal();
+        System.out.println("Dirección de envío: " + totalPrice);
 
         // Aplicar descuento por cantidad de productos (más de 5 productos)
         long totalItems = cart.getBooks().stream().mapToInt(CartItem::getQuantity).sum();
         if (totalItems > 5) {
             totalPrice = totalPrice * 0.9;  // 10% de descuento si hay más de 5 productos
         }
+        System.out.println("Precio con descuento por cantidad: " + totalPrice);
 
         //Aplicar descuento por código de descuento
         if (discountCode != null && !discountCode.isEmpty()) {
@@ -175,11 +178,13 @@ public class CartServiceImpl implements CartService {
                 System.out.println(e.getMessage());
             }
         }
+        System.out.println("Precio con descuento por código: " + totalPrice);
 
         // Aplicar descuento por método de pago (ejemplo: tarjeta de crédito tiene 5% de descuento)
         if (paymentMethod == PaymentMethod.CREDIT_CARD) {
             totalPrice = totalPrice * 0.95;  // 5% de descuento
         }
+        System.out.println("Precio con descuento por medio de pago: " + totalPrice);
 
         // Verificar stock y actualizar inventario
         /*for (CartItem cartItem : cart.getBooks()) {
@@ -190,9 +195,6 @@ public class CartServiceImpl implements CartService {
             book.setStock(book.getStock() - cartItem.getQuantity());
             bookService.updateBook(book);
         }*/
-
-        // Limpiar el carrito
-        clearCart(userId);
 
         // Crear el pedido
         Order order = new Order();
@@ -208,6 +210,8 @@ public class CartServiceImpl implements CartService {
         order.setStatus(OrderStatus.PENDING);
         orderService.createOrder(order);
 
+        // Limpiar el carrito
+        clearCart(userId);
         cartRepository.save(cart);;
     }
     

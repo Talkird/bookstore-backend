@@ -22,6 +22,7 @@ public class DiscountServiceImpl implements DiscountService{
 
         if (discount.isPresent() && discount.get().isValid()) {
             double discountAmount = totalPrice * (discount.get().getPercentage() / 100);
+            System.out.println("El descuento puede realizarse");
             return totalPrice - discountAmount;
         } else {
             throw new InvalidDiscountException("Código de descuento no válido o expirado.");
