@@ -37,4 +37,28 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException("Pedido no encontrado con el id: " + orderId));
     }
+
+    @Override
+    public void deleteOrder(Long orderId) throws OrderNotFoundException {
+        if (!orderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException("No se encontró una orden con ID " + orderId);
+        }
+        orderRepository.deleteById(orderId);
+    }
+
+    @Override
+    public Order updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException {
+        Order existingOrder = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("No se encontró una orden con ID " + orderId));
+
+        existingOrder.setCustomerName(updatedOrder.getCustomerName());
+        existingOrder.setCustomerEmail(updatedOrder.getCustomerEmail());
+        existingOrder.setCustomerPhone(updatedOrder.getCustomerPhone());
+        existingOrder.setShippingAddress(updatedOrder.getShippingAddress());
+        existingOrder.setTotal(updatedOrder.getTotal());
+        existingOrder.setPaymentMethod(updatedOrder.getPaymentMethod());
+        existingOrder.setStatus(updatedOrder.getStatus());
+
+        return orderRepository.save(existingOrder);
+    }
 }

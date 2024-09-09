@@ -14,5 +14,13 @@ public enum Genre {
     DEPORTE,
     ARTE,
     MUSICA,
-    COCINA
+    COCINA;
+
+    public static Genre fromString(String genre) {
+        try {
+            return Genre.valueOf(genre.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Género inválido: " + genre);
+        }
+    }
 }

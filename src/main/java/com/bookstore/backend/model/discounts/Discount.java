@@ -24,7 +24,7 @@ public class Discount {
     private double percentage;
 
     @Column
-    private boolean isActive; // Para activar o desactivar descuentos
+    private Boolean isActive; // Para activar o desactivar descuentos
 
     @Column
     private LocalDateTime expirationDate; // Fecha de expiración del código de descuento
@@ -32,5 +32,13 @@ public class Discount {
     // Método para verificar si el descuento está activo y no expirado
     public boolean isValid() {
         return isActive && expirationDate.isAfter(LocalDateTime.now());
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
