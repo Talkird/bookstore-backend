@@ -41,8 +41,12 @@ public class CartController {
 
     //VER QUE FUNCIONE
     @PutMapping("/carts")
-    public CartItem updateCartItem(@RequestBody CartItem cartItem) {
-        return cartService.updateCartItem(cartItem);
+    public CartItem updateCartItem(@RequestBody CartItemRequest cartItemRequest) {
+        Long id = cartItemRequest.getId();
+        Long bookId = cartItemRequest.getBookId();
+        int quantity = cartItemRequest.getQuantity();
+
+        return cartService.updateCartItem(id, bookId, quantity);
     }
 
     @DeleteMapping("/carts/{userId}/item/{id}/")

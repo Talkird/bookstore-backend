@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class CartItemRequest {
+    private Long id;
     private Long bookId;
     private String title;
     private String author;
