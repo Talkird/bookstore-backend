@@ -27,6 +27,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         // Endpoints públicos y de error
                         .requestMatchers("/api/v1/auth/**").permitAll() // Registro, login, etc.
+                        .requestMatchers("/carts/**").permitAll()
+                        .requestMatchers("/books/**").permitAll()
+                        .requestMatchers("/orders/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

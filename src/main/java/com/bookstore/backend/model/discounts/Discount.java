@@ -1,11 +1,8 @@
 package com.bookstore.backend.model.discounts;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -26,8 +23,22 @@ public class Discount {
     @Column(nullable = false)
     private double percentage;
 
-    public Discount(String code, double percentage) {
-        this.code = code;
-        this.percentage = percentage;
+    @Column
+    private Boolean isActive; // Para activar o desactivar descuentos
+
+    @Column
+    private LocalDateTime expirationDate; // Fecha de expiración del código de descuento
+
+    // Método para verificar si el descuento está activo y no expirado
+    public boolean isValid() {
+        return isActive && expirationDate.isAfter(LocalDateTime.now());
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
