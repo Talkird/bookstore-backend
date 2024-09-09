@@ -1,6 +1,7 @@
 package com.bookstore.backend.controller;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +18,12 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("/orders/{id}")                                                 //todo probar
     public List<Order> getOrdersByUserId(@PathVariable Long userId) {
         return orderService.getOrdersByUserId(userId);
     }
 
-    @PostMapping("/orders")
+    @PostMapping("/orders")                                                     //todo revisar si es necesario
     public Order createOrder(@RequestBody Order order) {
         return orderService.createOrder(order);
     }

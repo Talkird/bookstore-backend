@@ -37,7 +37,7 @@ public class BookController {
         return bookService.getBookById(id);
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/edit/{id}")  //todo revisar si es necesario el id
     public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
         return bookService.updateBook(book);
     }
