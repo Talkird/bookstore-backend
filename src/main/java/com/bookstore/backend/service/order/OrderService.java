@@ -4,16 +4,17 @@ import java.util.List;
 
 import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.order.OrderNotFoundException;
+import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.model.order.Order;
 
 public interface OrderService {
-    public List<Order> getOrdersByUserId(Long userId) throws UserNotFoundException;
+    List<OrderResponse> getOrdersByUserId(Long userId) throws UserNotFoundException;
 
-    public Order createOrder(Order order);
+    OrderResponse createOrder(Order order);
 
-    public Order getOrderById(Long orderId) throws OrderNotFoundException;
+    OrderResponse getOrderById(Long orderId) throws OrderNotFoundException;
 
-    public void deleteOrder(Long orderId) throws OrderNotFoundException;
+    void deleteOrder(Long orderId) throws OrderNotFoundException;
 
-    public Order updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException;
+    OrderResponse updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException;
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookstore.backend.model.order.Order;
+import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.service.order.OrderService;
 
 @RestController
@@ -18,8 +18,8 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/get/{userId}")                                                 
-    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
+    @GetMapping("/{userId}")                                                 
+    public List<OrderResponse> getOrdersByUserId(@PathVariable Long userId) {
         return orderService.getOrdersByUserId(userId);
     }
 
