@@ -20,12 +20,12 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/orders/{id}")                                                 //todo probar
+    @GetMapping("/orders/{id}") // todo probar
     public List<Order> getOrdersByUserId(@PathVariable Long userId) {
         return orderService.getOrdersByUserId(userId);
     }
 
-    @PostMapping("/orders")                                                     //todo revisar si es necesario
+    @PostMapping("/orders") // todo revisar si es necesario
     public Order createOrder(@RequestBody Order order) {
         return orderService.createOrder(order);
     }
