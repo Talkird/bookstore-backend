@@ -1,5 +1,6 @@
 package com.bookstore.backend.controller;
 
+import com.bookstore.backend.model.dto.RatingRequest;
 import com.bookstore.backend.model.rating.Rating;
 import com.bookstore.backend.service.rating.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,15 @@ public class RatingController {
     }
 
     @PostMapping("/user/{userId}/book/{bookId}")
-    public ResponseEntity<Rating> createOrUpdateRating(@PathVariable Long userId,@PathVariable Long bookId,@RequestParam int ratingValue) {
+    public ResponseEntity<Rating> createOrUpdateRating(@PathVariable Long userId,@PathVariable Long bookId,@RequestBody RatingRequest ratingRequest) {
+        int ratingValue = ratingRequest.getRatingValue();
         Rating rating = ratingService.updateOrCreateRating(userId, bookId, ratingValue);
         return ResponseEntity.ok(rating);
     }
 
     @DeleteMapping("/{ratingId}")
-    public ResponseEntity<Void> deleteRating(@PathVariable Long ratingId) {
+    public ResponseEntity<String> deleteRating(@PathVariable Long ratingId) {
         ratingService.deleteRating(ratingId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Se eliminó correctamente");
     }
 }
