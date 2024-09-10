@@ -21,6 +21,7 @@ public class BookResponse {
     private int stock;
     private Genre genre;
     private String description;
+    private double rating;
 
     public static BookResponse convertToBookResponse(Book book) {
         return BookResponse.builder()
@@ -33,6 +34,7 @@ public class BookResponse {
                 .stock(book.getStock())
                 .genre(book.getGenre())
                 .description(book.getDescription())
+                .rating(book.getRating())
                 .build();
     }
 
@@ -53,6 +55,7 @@ public class BookResponse {
         book.setStock(bookResponse.getStock());
         book.setGenre(bookResponse.getGenre());
         book.setDescription(bookResponse.getDescription());
+        book.setRating(bookResponse.getRating());
         return book;
     }
 }

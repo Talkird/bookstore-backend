@@ -11,29 +11,26 @@ import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.rating.RatingNotFoundException;
 import com.bookstore.backend.model.book.Book;
-import com.bookstore.backend.model.dto.BookRequest;
-import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.model.dto.RatingResponse;
 import com.bookstore.backend.model.rating.Rating;
 import com.bookstore.backend.model.user.User;
+import com.bookstore.backend.repository.BookRepository;
 import com.bookstore.backend.repository.RatingRepository;
 import com.bookstore.backend.service.auth.AuthenticationService;
-import com.bookstore.backend.service.book.BookService;
 
 @Service
-public class RatingServiceImp implements RatingService {
+public class RatingServiceImpl implements RatingService {
 
     @Autowired
     private RatingRepository ratingRepository;
 
     @Autowired
-    private BookService bookService;
+    private BookRepository bookRepository;
 
     @Autowired
     private AuthenticationService userService;
 
     @Override
-
     public RatingResponse updateOrCreateRating(Long userId, Long bookId, int ratingValue)
             throws UserNotFoundException, BookNotFoundException {
         User user = userService.getUserById(userId);
@@ -41,7 +38,8 @@ public class RatingServiceImp implements RatingService {
             throw new UserNotFoundException("Usuario no encontrado con ID: " + userId);
         }
 
-        Book book = BookResponse.convertToBook(bookService.getBookById(bookId));
+        Book book = bookRepository.findById(bookId)
+        .orElseThrow(() -> new BookNotFoundException("Libro no encontrado con ID: " + bookId));
         if (book == null) {
             throw new BookNotFoundException("Libro no encontrado con ID: " + bookId);
         }
@@ -67,7 +65,7 @@ public class RatingServiceImp implements RatingService {
         book.getRatings().add(rating);
         Rating savedRating = ratingRepository.save(rating);
         book.updateAverageRating();
-        bookService.updateBook(bookId, BookRequest.convertToBookRequest(book));
+        bookRepository.save(book);
 
         return mapToRatingResponse(savedRating);
     }
@@ -104,10 +102,11 @@ public class RatingServiceImp implements RatingService {
         Long bookId = rating.getBook().getId();
         ratingRepository.deleteById(ratingId);
 
-        Book book = BookResponse.convertToBook(bookService.getBookById(bookId));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Libro no encontrado con ID: " + bookId));
         book.getRatings().remove(rating);
         book.updateAverageRating();
-        bookService.updateBook(bookId, BookRequest.convertToBookRequest(book));
+        bookRepository.save(book);
     }
 
     private RatingResponse mapToRatingResponse(Rating rating) {
