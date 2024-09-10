@@ -5,30 +5,32 @@ import java.util.List;
 import com.bookstore.backend.exception.book.BookAlreadyExistsException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
-import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.book.Genre;
+import com.bookstore.backend.model.dto.BookRequest;
+import com.bookstore.backend.model.dto.BookResponse;
 
 public interface BookService {
 
-    public List<Book> getBooks() throws BookNotFoundException;
+    public List<BookResponse> getBooks() throws BookNotFoundException;
 
-    public Book createBook(Book book) throws BookAlreadyExistsException, InvalidBookDataException;
+    public BookResponse createBook(BookRequest book) throws BookAlreadyExistsException, InvalidBookDataException;
 
-    public Book getBookById(Long id) throws BookNotFoundException;
+    public BookResponse getBookById(Long id) throws BookNotFoundException;
 
-    public List<Book> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException;
+    public List<BookResponse> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException;
 
-    public Book updateBook(Book book) throws BookNotFoundException, InvalidBookDataException;
+    public BookResponse updateBook(Long id, BookRequest book) throws BookNotFoundException, InvalidBookDataException;
 
     public void deleteBook(Long id) throws BookNotFoundException;
 
-    public List<Book> getBooksByPriceRange(double minPrice, double maxPrice) throws InvalidBookDataException;
+    public List<BookResponse> getBooksByPriceRange(double minPrice, double maxPrice) throws InvalidBookDataException;
 
-    public List<Book> getBooksByTitle(String title) throws BookNotFoundException;
+    public List<BookResponse> getBooksByTitle(String title) throws BookNotFoundException;
 
-    public List<Book> getBooksByAuthor(String author) throws BookNotFoundException;
+    public List<BookResponse> getBooksByAuthor(String author) throws BookNotFoundException;
 
-    public List<Book> getAvailableBooks() throws BookNotFoundException;
+    public List<BookResponse> getAvailableBooks() throws BookNotFoundException;
 
-    public List<Book> getBooksOrderedByPrice(boolean ascending) throws BookNotFoundException, InvalidBookDataException;
+    public List<BookResponse> getBooksOrderedByPrice(boolean ascending)
+            throws BookNotFoundException, InvalidBookDataException;
 }

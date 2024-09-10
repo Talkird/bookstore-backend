@@ -11,6 +11,8 @@ import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.rating.RatingNotFoundException;
 import com.bookstore.backend.model.book.Book;
+import com.bookstore.backend.model.dto.BookRequest;
+import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.model.dto.RatingResponse;
 import com.bookstore.backend.model.rating.Rating;
 import com.bookstore.backend.model.user.User;
@@ -31,13 +33,15 @@ public class RatingServiceImp implements RatingService {
     private AuthenticationService userService;
 
     @Override
-    public RatingResponse updateOrCreateRating(Long userId, Long bookId, int ratingValue) throws UserNotFoundException, BookNotFoundException {
+
+    public RatingResponse updateOrCreateRating(Long userId, Long bookId, int ratingValue)
+            throws UserNotFoundException, BookNotFoundException {
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new UserNotFoundException("Usuario no encontrado con ID: " + userId);
         }
 
-        Book book = bookService.getBookById(bookId);
+        Book book = BookResponse.convertToBook(bookService.getBookById(bookId));
         if (book == null) {
             throw new BookNotFoundException("Libro no encontrado con ID: " + bookId);
         }
@@ -63,7 +67,7 @@ public class RatingServiceImp implements RatingService {
         book.getRatings().add(rating);
         Rating savedRating = ratingRepository.save(rating);
         book.updateAverageRating();
-        bookService.updateBook(book);
+        bookService.updateBook(bookId, BookRequest.convertToBookRequest(book));
 
         return mapToRatingResponse(savedRating);
     }
@@ -71,21 +75,24 @@ public class RatingServiceImp implements RatingService {
     @Override
     public List<RatingResponse> getRatingsByBook(Long bookId) throws BookNotFoundException {
         List<Rating> ratings = ratingRepository.findByBookId(bookId)
-                .orElseThrow(() -> new BookNotFoundException("No se encontraron calificaciones para el libro con ID: " + bookId));
+                .orElseThrow(() -> new BookNotFoundException(
+                        "No se encontraron calificaciones para el libro con ID: " + bookId));
         return mapToRatingResponse(ratings);
     }
 
     @Override
     public List<RatingResponse> getRatingsByUser(Long userId) throws UserNotFoundException {
         List<Rating> ratings = ratingRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("No se encontraron calificaciones para el usuario con ID: " + userId));
+                .orElseThrow(() -> new UserNotFoundException(
+                        "No se encontraron calificaciones para el usuario con ID: " + userId));
         return mapToRatingResponse(ratings);
     }
 
     @Override
     public RatingResponse getRatingByUserAndBook(Long userId, Long bookId) throws RatingNotFoundException {
         Rating rating = ratingRepository.findByUserIdAndBookId(userId, bookId)
-                .orElseThrow(() -> new RatingNotFoundException("Calificación no encontrada para el usuario con ID: " + userId + " y el libro con ID: " + bookId));
+                .orElseThrow(() -> new RatingNotFoundException("Calificación no encontrada para el usuario con ID: "
+                        + userId + " y el libro con ID: " + bookId));
         return mapToRatingResponse(rating);
     }
 
@@ -97,10 +104,10 @@ public class RatingServiceImp implements RatingService {
         Long bookId = rating.getBook().getId();
         ratingRepository.deleteById(ratingId);
 
-        Book book = bookService.getBookById(bookId);
+        Book book = BookResponse.convertToBook(bookService.getBookById(bookId));
         book.getRatings().remove(rating);
         book.updateAverageRating();
-        bookService.updateBook(book);
+        bookService.updateBook(bookId, BookRequest.convertToBookRequest(book));
     }
 
     private RatingResponse mapToRatingResponse(Rating rating) {
@@ -108,8 +115,7 @@ public class RatingServiceImp implements RatingService {
                 rating.getId(),
                 rating.getUser().getId(),
                 rating.getBook().getId(),
-                rating.getRating()
-        );
+                rating.getRating());
     }
 
     private List<RatingResponse> mapToRatingResponse(List<Rating> ratings) {

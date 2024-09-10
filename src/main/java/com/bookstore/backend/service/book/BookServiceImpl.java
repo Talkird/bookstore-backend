@@ -11,6 +11,8 @@ import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.book.InvalidBookDataException;
 import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.book.Genre;
+import com.bookstore.backend.model.dto.BookRequest;
+import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.repository.BookRepository;
 
 @Service
@@ -20,8 +22,8 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Override
-    public List<Book> getBooks() throws BookNotFoundException {
-        List<Book> books = bookRepository.findAll();
+    public List<BookResponse> getBooks() throws BookNotFoundException {
+        List<BookResponse> books = BookResponse.convertToBookResponse(bookRepository.findAll());
         if (books.isEmpty()) {
             throw new BookNotFoundException("No se encontraron libros.");
         }
@@ -29,29 +31,29 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book createBook(Book book) throws BookAlreadyExistsException, InvalidBookDataException {
+    public BookResponse createBook(BookRequest book) throws BookAlreadyExistsException, InvalidBookDataException {
         if (book.getPrice() < 0) {
             throw new InvalidBookDataException("El precio debe ser positivo.");
         }
 
-        return bookRepository.save(book);
+        return BookResponse.convertToBookResponse(bookRepository.save(BookRequest.convertToBook(book)));
     }
 
     @Override
-    public Book getBookById(Long id) throws BookNotFoundException {
-        return bookRepository.findById(id)
-                .orElseThrow(() -> new BookNotFoundException("No se encontró un libro con ID " + id));
+    public BookResponse getBookById(Long id) throws BookNotFoundException {
+        return BookResponse.convertToBookResponse(bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("No se encontró un libro con ID " + id)));
     }
 
     @Override
-    public List<Book> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException {
-        return bookRepository.findByGenre(genre)
-                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros para el género " + genre));
+    public List<BookResponse> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException {
+        return BookResponse.convertToBookResponse(bookRepository.findByGenre(genre)
+                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros para el género " + genre)));
     }
 
     @Override
-    public Book updateBook(Book book) throws BookNotFoundException, InvalidBookDataException {
-        Optional<Book> bookOptional = bookRepository.findById(book.getId());
+    public BookResponse updateBook(Long id, BookRequest book) throws BookNotFoundException, InvalidBookDataException {
+        Optional<Book> bookOptional = bookRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
             throw new BookNotFoundException("No se encontró un libro con ID " + book.getId());
@@ -67,7 +69,7 @@ public class BookServiceImpl implements BookService {
         existingBook.setPrice(book.getPrice());
         existingBook.setStock(book.getStock());
 
-        return bookRepository.save(existingBook);
+        return BookResponse.convertToBookResponse(bookRepository.save(existingBook));
     }
 
     @Override
@@ -79,40 +81,42 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksByPriceRange(double minPrice, double maxPrice) throws InvalidBookDataException {
+    public List<BookResponse> getBooksByPriceRange(double minPrice, double maxPrice) throws InvalidBookDataException {
         if (minPrice < 0 || maxPrice <= minPrice) {
             throw new InvalidBookDataException("Rango de precios invalido.");
         }
-        return bookRepository.findByPriceBetween(minPrice, maxPrice)
-                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros en el rango de precios especificado."));
+        return BookResponse.convertToBookResponse(bookRepository.findByPriceBetween(minPrice, maxPrice)
+                .orElseThrow(() -> new BookNotFoundException(
+                        "No se encontraron libros en el rango de precios especificado.")));
     }
 
     @Override
-    public List<Book> getBooksByTitle(String title) throws BookNotFoundException {
-        return bookRepository.findByTitleContaining(title)
-                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros con el título " + title));
+    public List<BookResponse> getBooksByTitle(String title) throws BookNotFoundException {
+        return BookResponse.convertToBookResponse(bookRepository.findByTitleContaining(title)
+                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros con el título " + title)));
     }
 
     @Override
-    public List<Book> getBooksByAuthor(String author) throws BookNotFoundException {
-        return bookRepository.findByAuthorContaining(author)
-                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros del autor " + author));
+    public List<BookResponse> getBooksByAuthor(String author) throws BookNotFoundException {
+        return BookResponse.convertToBookResponse(bookRepository.findByAuthorContaining(author)
+                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros del autor " + author)));
     }
 
     @Override
-    public List<Book> getAvailableBooks() throws BookNotFoundException {
-        return bookRepository.findByStockGreaterThan(0)
-                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros disponibles."));
+    public List<BookResponse> getAvailableBooks() throws BookNotFoundException {
+        return BookResponse.convertToBookResponse(bookRepository.findByStockGreaterThan(0)
+                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros disponibles.")));
     }
 
     @Override
-    public List<Book> getBooksOrderedByPrice(boolean ascending) throws BookNotFoundException {
+    public List<BookResponse> getBooksOrderedByPrice(boolean ascending) throws BookNotFoundException {
         Optional<List<Book>> books;
         if (ascending) {
             books = bookRepository.findAllByOrderByPriceAsc();
         } else {
             books = bookRepository.findAllByOrderByPriceDesc();
         }
-        return books.orElseThrow(() -> new BookNotFoundException("No se encontraron libros ordenados por precio."));
+        return BookResponse.convertToBookResponse(books
+                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros ordenados por precio.")));
     }
 }

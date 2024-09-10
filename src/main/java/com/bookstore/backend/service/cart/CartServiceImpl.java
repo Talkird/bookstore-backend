@@ -3,7 +3,6 @@ package com.bookstore.backend.service.cart;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,11 @@ import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.cart.Cart;
 import com.bookstore.backend.model.cart.CartItem;
+import com.bookstore.backend.model.dto.BookRequest;
+import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.model.dto.CartItemRequest;
+import com.bookstore.backend.model.dto.CartItemResponse;
+import com.bookstore.backend.model.dto.OrderRequest;
 import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.model.order.OrderStatus;
 import com.bookstore.backend.model.order.PaymentMethod;
@@ -47,21 +50,13 @@ public class CartServiceImpl implements CartService {
     private DiscountService discountService;
 
     @Override
-    public List<CartItemRequest> getCart(Long userId) throws CartNotFoundException {
-    Cart cart = cartRepository.findByUserId(userId)
-            .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
-    
-    // Convertir cada CartItem en un CartItemResponse
-    return cart.getBooks().stream().map((CartItem cartItem) -> 
-        new CartItemRequest(
-            cartItem.getBook().getId(),
-            cartItem.getBook().getTitle(),
-            cartItem.getBook().getAuthor(),
-            cartItem.getQuantity(),
-            cartItem.getBook().getPrice() * cartItem.getQuantity()
-        )
-    ).collect(Collectors.toList());
-}
+    public List<CartItemResponse> getCart(Long userId) throws CartNotFoundException {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+
+        return CartItemResponse.convertToCartItemResponse(cart.getBooks());
+    }
 
     @Override
     public void clearCart(Long userId) throws CartNotFoundException {
@@ -74,15 +69,19 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem addItemToCart(Long userId, Long bookId, int quantity) throws BookNotFoundException, InvalidBookDataException {
+    public CartItemResponse addItemToCart(Long userId, CartItemRequest cartItemRequest)
+            throws BookNotFoundException, InvalidBookDataException {
+        int quantity = cartItemRequest.getQuantity();
+        Long bookId = cartItemRequest.getBookId(); // cambiado
         if (quantity <= 0) {
             throw new InvalidBookDataException("La cantidad debe ser mayor a 0.");
         }
 
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
-        Book book = bookService.getBookById(bookId);
+        Book book = BookResponse.convertToBook(bookService.getBookById(bookId));
 
         if (book.getStock() < quantity) {
             throw new InvalidBookDataException("El libro no tiene suficiente stock.");
@@ -101,93 +100,81 @@ public class CartServiceImpl implements CartService {
             cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setBook(book);
-            cartItem.setQuantity(quantity); // Aquí se usa la cantidad solicitada
+            cartItem.setQuantity(quantity);
             cart.getBooks().add(cartItem);
         }
 
-        // Actualiza el stock del libro
-        book.setStock(book.getStock() - quantity);
-        bookService.updateBook(book);
-
         cartItem.updatePrice();
         cart.updateTotal();
-        cartRepository.save(cart);
+        // cartRepository.save(cart); removed
 
-        return cartItemRepository.save(cartItem);
+        return CartItemResponse.convertToCartItemResponse(cartItemRepository.save(cartItem));
     }
 
     @Override
-    public CartItem updateCartItem(Long userId,Long id,Long bookId,int quantity) throws CartItemNotFoundException,InvalidBookDataException {
+    public CartItemResponse updateCartItem(Long userId, Long cartItemId, CartItemRequest cartItemRequest)
+            throws CartItemNotFoundException, InvalidBookDataException {
+        int quantity = cartItemRequest.getQuantity();
+        Long bookId = cartItemRequest.getBookId(); // cambiado
+        Long id = cartItemId; // cambiado
         if (quantity <= 0) {
             throw new InvalidBookDataException("La cantidad debe ser mayor a 0.");
         }
 
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
-        Book book = bookService.getBookById(bookId);
+        Book book = BookResponse.convertToBook(bookService.getBookById(bookId));
 
         if (book.getStock() < quantity) {
             throw new InvalidBookDataException("El libro no tiene suficiente stock.");
         }
 
         CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(() -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
 
         cartItem.setQuantity(quantity);
         cartItem.updatePrice();
         cart.updateTotal();
         cartRepository.save(cart);
 
-        return cartItemRepository.save(cartItem); 
+        return CartItemResponse.convertToCartItemResponse(cartItemRepository.save(cartItem));
     }
 
     @Override
-    public void deleteCartItem(Long id, Long userId) throws CartItemNotFoundException{
-        CartItem cartItem = cartItemRepository.findById(id)
-                .orElseThrow(() -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
+    public void deleteCartItem(Long userId, Long cartItemId) throws CartItemNotFoundException {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("El artículo del carrito no se encuentra disponible."));
 
         Cart cart = cartItem.getCart();
 
         cart.getBooks().remove(cartItem);
         cart.updateTotal();
-
-        int quantity = cartItem.getQuantity();
-        Book book = cartItem.getBook();
-        
-
-        book.setStock(book.getStock() + quantity);
-        bookService.updateBook(book);
-
         cartItemRepository.delete(cartItem);
         cartRepository.save(cart);
     }
 
-    
-
     @Override
-    public void checkoutCart(Long userId, String customerName, String customerEmail, String customerPhone,
-            String shippingAddress, PaymentMethod paymentMethod, String discountCode) throws UserNotFoundException, CartNotFoundException {
-                Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
-
-                System.out.println("Nombre del cliente: " + customerEmail);
-                System.out.println("Email del cliente: " + customerName);
-                System.out.println("Teléfono del cliente: " + customerPhone);
-                System.out.println("Dirección de envío: " + shippingAddress);
-
+    public void checkoutCart(Long userId, OrderRequest orderRequest)
+            throws UserNotFoundException, CartNotFoundException {
+        String discountCode = orderRequest.getDiscountCode();
+        PaymentMethod paymentMethod = orderRequest.getPaymentMethod();
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(
+                        () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
         double totalPrice = cart.getTotal();
-        System.out.println("Dirección de envío: " + totalPrice);
 
         // Aplicar descuento por cantidad de productos (más de 5 productos)
-        long totalItems = cart.getBooks().stream().mapToInt(CartItem::getQuantity).sum();
+        int totalItems = cart.getBooks().stream().mapToInt(CartItem::getQuantity).sum();
         if (totalItems > 5) {
-            totalPrice = totalPrice * 0.9;  // 10% de descuento si hay más de 5 productos
+            totalPrice = totalPrice * 0.9; // 10% de descuento si hay más de 5 productos
         }
-        System.out.println("Precio con descuento por cantidad: " + totalPrice);
 
-        //Aplicar descuento por código de descuento
+        // Aplicar descuento por código de descuento
         if (discountCode != null && !discountCode.isEmpty()) {
             try {
                 totalPrice = discountService.applyDiscount(discountCode, totalPrice);
@@ -195,33 +182,33 @@ public class CartServiceImpl implements CartService {
                 System.out.println(e.getMessage());
             }
         }
-        System.out.println("Precio con descuento por código: " + totalPrice);
 
-        // Aplicar descuento por método de pago (ejemplo: tarjeta de crédito tiene 5% de descuento)
+        // Aplicar descuento por método de pago (ejemplo: tarjeta de crédito tiene 5% de
+        // descuento)
         if (paymentMethod == PaymentMethod.CREDIT_CARD) {
-            totalPrice = totalPrice * 0.95;  // 5% de descuento
+            totalPrice = totalPrice * 0.95; // 5% de descuento
         }
-        System.out.println("Precio con descuento por medio de pago: " + totalPrice);
 
         // Verificar stock y actualizar inventario
-        /*for (CartItem cartItem : cart.getBooks()) {
+        for (CartItem cartItem : cart.getBooks()) {
             Book book = cartItem.getBook();
             if (book.getStock() < cartItem.getQuantity()) {
-                throw new InvalidBookDataException("El libro no tiene suficiente stock.");
+                throw new InvalidBookDataException("El libro" + book.getTitle() + "no tiene suficiente stock.");
             }
             book.setStock(book.getStock() - cartItem.getQuantity());
-            bookService.updateBook(book);
-        }*/
+            BookRequest bookRequest = BookRequest.convertToBookRequest(book);
+            bookService.updateBook(book.getId(), bookRequest);
+        }
 
         // Crear el pedido
         Order order = new Order();
         order.setCart(cart);
         order.setUser(cart.getUser());
-        order.setTotal(totalPrice);  // Se usa el total con descuentos aplicados
-        order.setCustomerName(customerName);
-        order.setCustomerEmail(customerEmail);
-        order.setCustomerPhone(customerPhone);
-        order.setShippingAddress(shippingAddress);
+        order.setTotal(totalPrice); // Se usa el total con descuentos aplicados
+        order.setCustomerName(orderRequest.getCustomerName());
+        order.setCustomerEmail(orderRequest.getCustomerEmail());
+        order.setCustomerPhone(orderRequest.getCustomerPhone());
+        order.setShippingAddress(orderRequest.getShippingAddress());
         order.setPaymentMethod(paymentMethod);
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
@@ -229,15 +216,14 @@ public class CartServiceImpl implements CartService {
 
         // Limpiar el carrito
         clearCart(userId);
-        cartRepository.save(cart);;
+        cartRepository.save(cart);
     }
-    
+
     @Override
     public void createCart(User user) throws UserNotFoundException {
         Cart cart = new Cart();
         cart.setUser(user);
         cartRepository.save(cart);
     }
-
 
 }
