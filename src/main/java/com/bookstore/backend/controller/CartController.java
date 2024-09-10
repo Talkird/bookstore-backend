@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bookstore.backend.model.dto.CartItemRequest;
 import com.bookstore.backend.model.dto.CartItemResponse;
 import com.bookstore.backend.model.dto.OrderRequest;
+import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.service.cart.CartService;
 
 @RestController
@@ -56,8 +57,10 @@ public class CartController {
     }
 
     @PostMapping("/carts/checkout/{userId}")
-    public ResponseEntity<String> checkoutCart(@PathVariable Long userId, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> checkoutCart(@PathVariable Long userId,
+            @RequestBody OrderRequest orderRequest) {
         cartService.checkoutCart(userId, orderRequest);
-        return ResponseEntity.ok("Checkout completed successfully");
+        OrderResponse order = cartService.checkoutCart(userId, orderRequest);
+        return ResponseEntity.status(201).body(order);
     }
 }

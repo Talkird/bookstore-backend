@@ -21,6 +21,7 @@ import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.model.dto.CartItemRequest;
 import com.bookstore.backend.model.dto.CartItemResponse;
 import com.bookstore.backend.model.dto.OrderRequest;
+import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.model.order.OrderStatus;
 import com.bookstore.backend.model.order.PaymentMethod;
@@ -158,7 +159,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void checkoutCart(Long userId, OrderRequest orderRequest)
+    public OrderResponse checkoutCart(Long userId, OrderRequest orderRequest)
             throws UserNotFoundException, CartNotFoundException {
         String discountCode = orderRequest.getDiscountCode();
         PaymentMethod paymentMethod = orderRequest.getPaymentMethod();
@@ -212,11 +213,12 @@ public class CartServiceImpl implements CartService {
         order.setPaymentMethod(paymentMethod);
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
-        orderService.createOrder(order);
-
+        
         // Limpiar el carrito
         clearCart(userId);
         cartRepository.save(cart);
+        
+        return orderService.createOrder(order);
     }
 
     @Override

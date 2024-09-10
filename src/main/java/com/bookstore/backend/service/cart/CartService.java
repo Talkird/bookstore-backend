@@ -10,6 +10,7 @@ import com.bookstore.backend.exception.cart.CartNotFoundException;
 import com.bookstore.backend.model.dto.CartItemRequest;
 import com.bookstore.backend.model.dto.CartItemResponse;
 import com.bookstore.backend.model.dto.OrderRequest;
+import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.model.user.User;
 
 public interface CartService {
@@ -28,7 +29,7 @@ public interface CartService {
 
         public void deleteCartItem(Long userId, Long cartItemId) throws CartItemNotFoundException;
 
-        public void checkoutCart(Long userId, OrderRequest orderRequest)
+        public OrderResponse checkoutCart(Long userId, OrderRequest orderRequest)
                         throws UserNotFoundException, CartNotFoundException;
 
 }
