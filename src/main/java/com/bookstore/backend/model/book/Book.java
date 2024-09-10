@@ -72,7 +72,6 @@ public class Book {
     @Column
     private double rating;
 
-    // Relación con la tabla de imágenes
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
