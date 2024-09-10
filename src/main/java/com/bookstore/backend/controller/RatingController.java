@@ -42,8 +42,8 @@ public class RatingController {
     }
 
     @DeleteMapping("/{ratingId}")
-    public ResponseEntity<Void> deleteRating(@PathVariable Long ratingId) {
+    public ResponseEntity<String> deleteRating(@PathVariable Long ratingId) {
         ratingService.deleteRating(ratingId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Se eliminó correctamente");
     }
 }

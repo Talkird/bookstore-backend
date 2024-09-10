@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/books/**").permitAll()
                         .requestMatchers("/orders/**").permitAll()
                         .requestMatchers( "/images/**").permitAll()
+                        .requestMatchers( "/api/ratings/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
