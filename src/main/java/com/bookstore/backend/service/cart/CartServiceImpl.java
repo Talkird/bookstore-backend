@@ -216,8 +216,7 @@ public class CartServiceImpl implements CartService {
         
         // Limpiar el carrito
         clearCart(userId);
-        cartRepository.save(cart);
-        
+
         return orderService.createOrder(order);
     }
 
