@@ -40,9 +40,6 @@ public class RatingServiceImpl implements RatingService {
 
         Book book = bookRepository.findById(bookId)
         .orElseThrow(() -> new BookNotFoundException("Libro no encontrado con ID: " + bookId));
-        if (book == null) {
-            throw new BookNotFoundException("Libro no encontrado con ID: " + bookId);
-        }
 
         Optional<Rating> existingRating = ratingRepository.findByUserIdAndBookId(userId, bookId);
         Rating rating;
