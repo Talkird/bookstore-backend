@@ -64,7 +64,7 @@ public class RatingServiceImp implements RatingService {
         book.getRatings().add(rating);
         Rating savedRating = ratingRepository.save(rating);
         book.updateAverageRating();
-        bookService.updateBook(BookRequest.convertToBookRequest(book));
+        bookService.updateBook(bookId, BookRequest.convertToBookRequest(book));
 
         return savedRating;
     }
@@ -101,6 +101,6 @@ public class RatingServiceImp implements RatingService {
         Book book = BookResponse.convertToBook(bookService.getBookById(bookId));
         book.getRatings().remove(rating);
         book.updateAverageRating();
-        bookService.updateBook(BookRequest.convertToBookRequest(book));
+        bookService.updateBook(bookId, BookRequest.convertToBookRequest(book));
     }
 }

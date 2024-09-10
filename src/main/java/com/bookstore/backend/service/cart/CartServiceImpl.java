@@ -197,7 +197,7 @@ public class CartServiceImpl implements CartService {
             }
             book.setStock(book.getStock() - cartItem.getQuantity());
             BookRequest bookRequest = BookRequest.convertToBookRequest(book);
-            bookService.updateBook(bookRequest);
+            bookService.updateBook(book.getId(), bookRequest);
         }
 
         // Crear el pedido
