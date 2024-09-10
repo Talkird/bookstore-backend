@@ -26,79 +26,80 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    //ADMIN
+    // ADMIN
     @GetMapping("/all")
     public ResponseEntity<List<BookResponse>> getBooks() {
         return ResponseEntity.ok(bookService.getBooks());
     }
 
-    //ADMIN
+    // ADMIN
     @PostMapping("/create")
     public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest book) {
         BookResponse createdBook = bookService.createBook(book);
         return ResponseEntity.status(201).body(createdBook); // 201 Created
     }
 
-    //ADMIN
+    // ADMIN
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getBook(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.getBookById(id));
     }
 
-    //ADMIN
+    // ADMIN
     @PutMapping("/edit/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @RequestBody BookRequest book) {
-        BookResponse updatedBook = bookService.updateBook(book);
+        BookResponse updatedBook = bookService.updateBook(id, book);
         return ResponseEntity.ok(updatedBook);
     }
 
-    //ADMIN
+    // ADMIN
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.ok("Book deleted successfully"); // 200 OK con mensaje personalizado
     }
 
-    //ALL
+    // ALL
     @GetMapping("/genre/{genre}")
     public ResponseEntity<List<BookResponse>> getBooksByGenre(@PathVariable("genre") String genreString) {
         Genre genre = Genre.fromString(genreString);
         return ResponseEntity.ok(bookService.getBookByGenre(genre));
     }
 
-    //ALL
+    // ALL
     @GetMapping("/price-range")
-    public ResponseEntity<List<BookResponse>> getBooksByPriceRange(@RequestParam double minPrice, @RequestParam double maxPrice) {
+    public ResponseEntity<List<BookResponse>> getBooksByPriceRange(@RequestParam double minPrice,
+            @RequestParam double maxPrice) {
         return ResponseEntity.ok(bookService.getBooksByPriceRange(minPrice, maxPrice));
     }
 
-    //ALL
+    // ALL
     @GetMapping("/title/{title}")
     public ResponseEntity<List<BookResponse>> getBooksByTitle(@PathVariable("title") String title) {
         return ResponseEntity.ok(bookService.getBooksByTitle(title));
     }
 
-    //ALL
+    // ALL
     @GetMapping("/author/{author}")
     public ResponseEntity<List<BookResponse>> getBooksByAuthor(@PathVariable("author") String author) {
         return ResponseEntity.ok(bookService.getBooksByAuthor(author));
     }
 
-    //ALL
+    // ALL
     @GetMapping("/available")
     public ResponseEntity<List<BookResponse>> getAvailableBooks() {
         return ResponseEntity.ok(bookService.getAvailableBooks());
     }
-    
-    //ALL
+
+    // ALL
     @GetMapping("/ordered-by-price-asc")
     public ResponseEntity<List<BookResponse>> getBooksOrderedByPriceAsc() {
-        return ResponseEntity.ok(bookService.getBooksOrderedByPrice(true));  // true para orden ascendente
+        return ResponseEntity.ok(bookService.getBooksOrderedByPrice(true)); // true para orden ascendente
     }
 
-    //ALL
+    // ALL
     @GetMapping("/ordered-by-price-desc")
     public ResponseEntity<List<BookResponse>> getBooksOrderedByPriceDesc() {
-        return ResponseEntity.ok(bookService.getBooksOrderedByPrice(false));  // false para orden descendente
+        return ResponseEntity.ok(bookService.getBooksOrderedByPrice(false)); // false para orden descendente
     }
 }

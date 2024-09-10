@@ -36,14 +36,16 @@ public class CartController {
     }
 
     @PostMapping("/carts/{userId}")
-    public ResponseEntity<CartItemResponse> addCartItem(@PathVariable Long userId, @RequestBody CartItemRequest cartItemRequest) {
+    public ResponseEntity<CartItemResponse> addCartItem(@PathVariable Long userId,
+            @RequestBody CartItemRequest cartItemRequest) {
         CartItemResponse cartItem = cartService.addItemToCart(userId, cartItemRequest);
         return ResponseEntity.status(201).body(cartItem); // Devuelve 201 Created
     }
 
-    @PutMapping("/carts/{userId}")
-    public ResponseEntity<CartItemResponse> updateCartItem(@PathVariable Long userId, @RequestBody CartItemRequest cartItemRequest) {
-        CartItemResponse updatedCartItem = cartService.updateCartItem(userId, cartItemRequest);
+    @PutMapping("/carts/{userId}/{cartItemId}")
+    public ResponseEntity<CartItemResponse> updateCartItem(@PathVariable Long userId, @PathVariable Long cartItemId,
+            @RequestBody CartItemRequest cartItemRequest) {
+        CartItemResponse updatedCartItem = cartService.updateCartItem(userId, cartItemId, cartItemRequest);
         return ResponseEntity.ok(updatedCartItem);
     }
 

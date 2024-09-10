@@ -20,25 +20,27 @@ public class BookResponse {
     private double price;
     private int stock;
     private Genre genre;
+    private String description;
 
     public static BookResponse convertToBookResponse(Book book) {
-    return BookResponse.builder()
-            .id(book.getId())
-            .isbn(book.getIsbn())
-            .title(book.getTitle())
-            .author(book.getAuthor())
-            .year(book.getYear())
-            .price(book.getPrice())
-            .stock(book.getStock())
-            .genre(book.getGenre())
-            .build();
+        return BookResponse.builder()
+                .id(book.getId())
+                .isbn(book.getIsbn())
+                .title(book.getTitle())
+                .author(book.getAuthor())
+                .year(book.getYear())
+                .price(book.getPrice())
+                .stock(book.getStock())
+                .genre(book.getGenre())
+                .description(book.getDescription())
+                .build();
     }
 
     public static List<BookResponse> convertToBookResponse(List<Book> books) {
         List<BookResponse> bookResponses = new ArrayList<>();
         books.forEach(book -> bookResponses.add(convertToBookResponse(book)));
         return bookResponses;
-    } 
+    }
 
     public static Book convertToBook(BookResponse bookResponse) {
         Book book = new Book();
@@ -50,6 +52,7 @@ public class BookResponse {
         book.setPrice(bookResponse.getPrice());
         book.setStock(bookResponse.getStock());
         book.setGenre(bookResponse.getGenre());
+        book.setDescription(bookResponse.getDescription());
         return book;
     }
 }

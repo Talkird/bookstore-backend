@@ -19,7 +19,7 @@ public interface BookService {
 
     public List<BookResponse> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException;
 
-    public BookResponse updateBook(BookRequest book) throws BookNotFoundException, InvalidBookDataException;
+    public BookResponse updateBook(Long id, BookRequest book) throws BookNotFoundException, InvalidBookDataException;
 
     public void deleteBook(Long id) throws BookNotFoundException;
 
@@ -31,5 +31,6 @@ public interface BookService {
 
     public List<BookResponse> getAvailableBooks() throws BookNotFoundException;
 
-    public List<BookResponse> getBooksOrderedByPrice(boolean ascending) throws BookNotFoundException, InvalidBookDataException;
+    public List<BookResponse> getBooksOrderedByPrice(boolean ascending)
+            throws BookNotFoundException, InvalidBookDataException;
 }

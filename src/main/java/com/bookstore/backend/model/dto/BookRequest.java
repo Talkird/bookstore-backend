@@ -17,10 +17,10 @@ public class BookRequest {
     private double price;
     private int stock;
     private Genre genre;
+    private String description;
 
     public static Book convertToBook(BookRequest bookRequest) {
         Book book = new Book();
-        book.setId(bookRequest.getId());
         book.setIsbn(bookRequest.getIsbn());
         book.setTitle(bookRequest.getTitle());
         book.setAuthor(bookRequest.getAuthor());
@@ -28,6 +28,7 @@ public class BookRequest {
         book.setPrice(bookRequest.getPrice());
         book.setStock(bookRequest.getStock());
         book.setGenre(bookRequest.getGenre());
+        book.setDescription(bookRequest.getDescription());
         return book;
     }
 
@@ -41,6 +42,7 @@ public class BookRequest {
                 .price(book.getPrice())
                 .stock(book.getStock())
                 .genre(book.getGenre())
+                .description(book.getDescription())
                 .build();
     }
 }

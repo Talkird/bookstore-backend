@@ -52,8 +52,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponse updateBook(BookRequest book) throws BookNotFoundException, InvalidBookDataException {
-        Optional<Book> bookOptional = bookRepository.findById(book.getId());
+    public BookResponse updateBook(Long id, BookRequest book) throws BookNotFoundException, InvalidBookDataException {
+        Optional<Book> bookOptional = bookRepository.findById(id);
 
         if (!bookOptional.isPresent()) {
             throw new BookNotFoundException("No se encontró un libro con ID " + book.getId());
@@ -86,7 +86,8 @@ public class BookServiceImpl implements BookService {
             throw new InvalidBookDataException("Rango de precios invalido.");
         }
         return BookResponse.convertToBookResponse(bookRepository.findByPriceBetween(minPrice, maxPrice)
-                .orElseThrow(() -> new BookNotFoundException("No se encontraron libros en el rango de precios especificado.")));
+                .orElseThrow(() -> new BookNotFoundException(
+                        "No se encontraron libros en el rango de precios especificado.")));
     }
 
     @Override

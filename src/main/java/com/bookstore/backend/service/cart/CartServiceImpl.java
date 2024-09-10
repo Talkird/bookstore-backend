@@ -72,7 +72,7 @@ public class CartServiceImpl implements CartService {
     public CartItemResponse addItemToCart(Long userId, CartItemRequest cartItemRequest)
             throws BookNotFoundException, InvalidBookDataException {
         int quantity = cartItemRequest.getQuantity();
-        Long bookId = cartItemRequest.getBook().getId();
+        Long bookId = cartItemRequest.getBookId(); // cambiado
         if (quantity <= 0) {
             throw new InvalidBookDataException("La cantidad debe ser mayor a 0.");
         }
@@ -106,17 +106,17 @@ public class CartServiceImpl implements CartService {
 
         cartItem.updatePrice();
         cart.updateTotal();
-        cartRepository.save(cart);
+        // cartRepository.save(cart); removed
 
         return CartItemResponse.convertToCartItemResponse(cartItemRepository.save(cartItem));
     }
 
     @Override
-    public CartItemResponse updateCartItem(Long userId, CartItemRequest cartItemRequest)
+    public CartItemResponse updateCartItem(Long userId, Long cartItemId, CartItemRequest cartItemRequest)
             throws CartItemNotFoundException, InvalidBookDataException {
         int quantity = cartItemRequest.getQuantity();
-        Long bookId = cartItemRequest.getBook().getId();
-        Long id = cartItemRequest.getId();
+        Long bookId = cartItemRequest.getBookId(); // cambiado
+        Long id = cartItemId; // cambiado
         if (quantity <= 0) {
             throw new InvalidBookDataException("La cantidad debe ser mayor a 0.");
         }

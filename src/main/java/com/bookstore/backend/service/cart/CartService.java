@@ -14,21 +14,21 @@ import com.bookstore.backend.model.user.User;
 
 public interface CartService {
 
-    public void createCart(User user) throws UserNotFoundException;
+        public void createCart(User user) throws UserNotFoundException;
 
-    public List<CartItemResponse> getCart(Long userId) throws CartNotFoundException;
+        public List<CartItemResponse> getCart(Long userId) throws CartNotFoundException;
 
-    public void clearCart(Long userId) throws UserNotFoundException, CartNotFoundException;
+        public void clearCart(Long userId) throws UserNotFoundException, CartNotFoundException;
 
-    public CartItemResponse addItemToCart(Long userId, CartItemRequest cartItemRequest)
-            throws UserNotFoundException, BookNotFoundException, InvalidBookDataException;
+        public CartItemResponse addItemToCart(Long userId, CartItemRequest cartItemRequest)
+                        throws UserNotFoundException, BookNotFoundException, InvalidBookDataException;
 
-    public CartItemResponse updateCartItem(Long userId, CartItemRequest cartItemRequest)
-            throws CartItemNotFoundException, InvalidBookDataException;
+        public CartItemResponse updateCartItem(Long userId, Long cartItemId, CartItemRequest cartItemRequest)
+                        throws CartItemNotFoundException, InvalidBookDataException;
 
-    public void deleteCartItem(Long userId, Long cartItemId) throws CartItemNotFoundException;
+        public void deleteCartItem(Long userId, Long cartItemId) throws CartItemNotFoundException;
 
-    public void checkoutCart(Long userId, OrderRequest orderRequest)
-            throws UserNotFoundException, CartNotFoundException;
+        public void checkoutCart(Long userId, OrderRequest orderRequest)
+                        throws UserNotFoundException, CartNotFoundException;
 
 }
