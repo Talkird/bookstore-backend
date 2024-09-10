@@ -55,7 +55,6 @@ public class CartController {
         cartService.deleteCartItem(id,userId);
     }
 
-    //VER QUE FUNCIONE
     @PostMapping("/checkout/{userId}")
     public void checkoutCart(@PathVariable Long userId, @RequestBody OrderRequest orderRequest) {
         cartService.checkoutCart(userId, orderRequest.getCustomerName(), orderRequest.getCustomerEmail(), 
