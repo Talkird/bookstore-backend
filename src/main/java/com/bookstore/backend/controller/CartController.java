@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.backend.model.cart.CartItem;
@@ -17,22 +18,23 @@ import com.bookstore.backend.model.dto.OrderRequest;
 import com.bookstore.backend.service.cart.CartService;
 
 @RestController
+@RequestMapping("/carts")
 public class CartController {
 
     @Autowired
     private CartService cartService;
 
-    @GetMapping("/carts/{userId}")
+    @GetMapping("/{userId}")
     public List<CartItemRequest> getCart(@PathVariable Long userId) {
         return cartService.getCart(userId);
     }
 
-    @DeleteMapping("/carts/{userId}")
+    @DeleteMapping("/{userId}")
     public void clearCart(@PathVariable Long userId) {
         cartService.clearCart(userId);
     }
 
-    @PostMapping("/carts/{userId}")
+    @PostMapping("/{userId}")
     public CartItem addCartItem(@PathVariable Long userId, @RequestBody CartItemRequest cartItemRequest) {
         Long bookId = cartItemRequest.getBookId();
         int quantity = cartItemRequest.getQuantity();
@@ -40,7 +42,7 @@ public class CartController {
         }
 
     //VER QUE FUNCIONE
-    @PutMapping("/carts/{userId}/item/{id}")
+    @PutMapping("/{userId}/item/{id}")
     public CartItem updateCartItem(@PathVariable Long userId,@PathVariable Long id,@RequestBody CartItemRequest cartItemRequest) {
         Long bookId = cartItemRequest.getBookId();
         int quantity = cartItemRequest.getQuantity();
@@ -48,13 +50,12 @@ public class CartController {
         return cartService.updateCartItem(userId,id, bookId, quantity);
     }
 
-    @DeleteMapping("/carts/{userId}/item/{id}")
+    @DeleteMapping("/{userId}/item/{id}")
     public void deleteCartItem(@PathVariable Long id, @PathVariable Long userId) {
         cartService.deleteCartItem(id,userId);
     }
 
-    //VER QUE FUNCIONE
-    @PostMapping("/carts/checkout/{userId}")
+    @PostMapping("/checkout/{userId}")
     public void checkoutCart(@PathVariable Long userId, @RequestBody OrderRequest orderRequest) {
         cartService.checkoutCart(userId, orderRequest.getCustomerName(), orderRequest.getCustomerEmail(), 
                                 orderRequest.getCustomerPhone(), orderRequest.getShippingAddress(), 

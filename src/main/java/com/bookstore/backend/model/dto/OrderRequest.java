@@ -12,4 +12,4 @@ public class OrderRequest {
     private String shippingAddress;
     private PaymentMethod paymentMethod;
     private String discountCode;
-}
+}   
