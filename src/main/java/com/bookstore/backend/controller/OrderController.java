@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.service.order.OrderService;
 
@@ -21,12 +22,12 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping("/orders/{id}")                                                 //todo probar
-    public List<Order> getOrdersByUserId(@PathVariable Long userId) {
+    public List<OrderResponse> getOrdersByUserId(@PathVariable Long userId) {
         return orderService.getOrdersByUserId(userId);
     }
 
     @PostMapping("/orders")                                                     //todo revisar si es necesario
-    public Order createOrder(@RequestBody Order order) {
+    public OrderResponse createOrder(@RequestBody Order order) {
         return orderService.createOrder(order);
     }
 
@@ -36,7 +37,7 @@ public class OrderController {
     }
 
     @PutMapping("/orders/{orderId}")
-    public Order updateOrder(@PathVariable Long orderId, @RequestBody Order updatedOrder) {
+    public OrderResponse updateOrder(@PathVariable Long orderId, @RequestBody Order updatedOrder) {
         return orderService.updateOrder(orderId, updatedOrder);
     }
 }

@@ -1,12 +1,14 @@
 package com.bookstore.backend.service.order;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.order.OrderNotFoundException;
+import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.OrderRepository;
@@ -22,20 +24,22 @@ public class OrderServiceImpl implements OrderService {
     private UserRepository userRepository;
 
     @Override
-    public List<Order> getOrdersByUserId(Long userId) throws UserNotFoundException {
+    public List<OrderResponse> getOrdersByUserId(Long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el id: " + userId));
-        return user.getOrders();
+        return mapToOrderResponse(user.getOrders());
     }
 
     @Override
-    public Order createOrder(Order order) {
-        return orderRepository.save(order);
+    public OrderResponse createOrder(Order order) {
+        Order savedOrder = orderRepository.save(order);
+        return mapToOrderResponse(savedOrder);
     }
 
-    public Order getOrderById(Long orderId) throws OrderNotFoundException {
-        return orderRepository.findById(orderId)
+    public OrderResponse getOrderById(Long orderId) throws OrderNotFoundException {
+        Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException("Pedido no encontrado con el id: " + orderId));
+        return mapToOrderResponse(order);
     }
 
     @Override
@@ -47,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException {
+    public OrderResponse updateOrder(Long orderId, Order updatedOrder) throws OrderNotFoundException {
         Order existingOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("No se encontró una orden con ID " + orderId));
 
@@ -59,6 +63,28 @@ public class OrderServiceImpl implements OrderService {
         existingOrder.setPaymentMethod(updatedOrder.getPaymentMethod());
         existingOrder.setStatus(updatedOrder.getStatus());
 
-        return orderRepository.save(existingOrder);
+        Order savedOrder = orderRepository.save(existingOrder);
+        return mapToOrderResponse(savedOrder);
     }
+
+    private OrderResponse mapToOrderResponse(Order order) {
+        return new OrderResponse(
+                order.getId(),
+                order.getCustomerName(),
+                order.getCustomerEmail(),
+                order.getCustomerPhone(),
+                order.getShippingAddress(),
+                order.getTotal(),
+                order.getDate(),
+                order.getPaymentMethod(),
+                order.getUser().getId(),
+                order.getCart().getId(),
+                order.getStatus()
+        );
+    }
+
+    private List<OrderResponse> mapToOrderResponse(List<Order> orders) {
+        return orders.stream().map(this::mapToOrderResponse).collect(Collectors.toList());
+    }
+    
 }
