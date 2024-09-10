@@ -2,6 +2,7 @@ package com.bookstore.backend.service.rating;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.exception.rating.RatingNotFoundException;
 import com.bookstore.backend.model.book.Book;
+import com.bookstore.backend.model.dto.RatingResponse;
 import com.bookstore.backend.model.rating.Rating;
 import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.RatingRepository;
@@ -29,7 +31,7 @@ public class RatingServiceImp implements RatingService {
     private AuthenticationService userService;
 
     @Override
-    public Rating updateOrCreateRating(Long userId, Long bookId, int ratingValue) throws UserNotFoundException, BookNotFoundException {
+    public RatingResponse updateOrCreateRating(Long userId, Long bookId, int ratingValue) throws UserNotFoundException, BookNotFoundException {
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new UserNotFoundException("Usuario no encontrado con ID: " + userId);
@@ -63,25 +65,28 @@ public class RatingServiceImp implements RatingService {
         book.updateAverageRating();
         bookService.updateBook(book);
 
-        return savedRating;
+        return mapToRatingResponse(savedRating);
     }
 
     @Override
-    public List<Rating> getRatingsByBook(Long bookId) throws BookNotFoundException {
-        return ratingRepository.findByBookId(bookId)
+    public List<RatingResponse> getRatingsByBook(Long bookId) throws BookNotFoundException {
+        List<Rating> ratings = ratingRepository.findByBookId(bookId)
                 .orElseThrow(() -> new BookNotFoundException("No se encontraron calificaciones para el libro con ID: " + bookId));
+        return mapToRatingResponse(ratings);
     }
 
     @Override
-    public List<Rating> getRatingsByUser(Long userId) throws UserNotFoundException {
-        return ratingRepository.findByUserId(userId)
+    public List<RatingResponse> getRatingsByUser(Long userId) throws UserNotFoundException {
+        List<Rating> ratings = ratingRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("No se encontraron calificaciones para el usuario con ID: " + userId));
+        return mapToRatingResponse(ratings);
     }
 
     @Override
-    public Rating getRatingByUserAndBook(Long userId, Long bookId) throws RatingNotFoundException {
-        return ratingRepository.findByUserIdAndBookId(userId, bookId)
+    public RatingResponse getRatingByUserAndBook(Long userId, Long bookId) throws RatingNotFoundException {
+        Rating rating = ratingRepository.findByUserIdAndBookId(userId, bookId)
                 .orElseThrow(() -> new RatingNotFoundException("Calificación no encontrada para el usuario con ID: " + userId + " y el libro con ID: " + bookId));
+        return mapToRatingResponse(rating);
     }
 
     @Override
@@ -96,5 +101,18 @@ public class RatingServiceImp implements RatingService {
         book.getRatings().remove(rating);
         book.updateAverageRating();
         bookService.updateBook(book);
+    }
+
+    private RatingResponse mapToRatingResponse(Rating rating) {
+        return new RatingResponse(
+                rating.getId(),
+                rating.getUser().getId(),
+                rating.getBook().getId(),
+                rating.getRating()
+        );
+    }
+
+    private List<RatingResponse> mapToRatingResponse(List<Rating> ratings) {
+        return ratings.stream().map(this::mapToRatingResponse).collect(Collectors.toList());
     }
 }
