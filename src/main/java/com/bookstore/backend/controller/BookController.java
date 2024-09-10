@@ -35,7 +35,8 @@ public class BookController {
     //ADMIN
     @PostMapping("/create")
     public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest book) {
-        return ResponseEntity.ok(bookService.createBook(book));
+        BookResponse createdBook = bookService.createBook(book);
+        return ResponseEntity.status(201).body(createdBook); // 201 Created
     }
 
     //ADMIN
@@ -47,14 +48,15 @@ public class BookController {
     //ADMIN
     @PutMapping("/edit/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @RequestBody BookRequest book) {
-        return ResponseEntity.ok(bookService.updateBook(book));
+        BookResponse updatedBook = bookService.updateBook(book);
+        return ResponseEntity.ok(updatedBook);
     }
 
     //ADMIN
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Book deleted successfully"); // 200 OK con mensaje personalizado
     }
 
     //ALL
@@ -87,7 +89,7 @@ public class BookController {
     public ResponseEntity<List<BookResponse>> getAvailableBooks() {
         return ResponseEntity.ok(bookService.getAvailableBooks());
     }
-
+    
     //ALL
     @GetMapping("/ordered-by-price-asc")
     public ResponseEntity<List<BookResponse>> getBooksOrderedByPriceAsc() {
