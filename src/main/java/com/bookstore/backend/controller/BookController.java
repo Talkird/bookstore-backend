@@ -37,7 +37,7 @@ public class BookController {
     }
 
     //ADMIN
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public Book getBook(@PathVariable Long id) {
         return bookService.getBookById(id);
     }

@@ -17,7 +17,7 @@ import com.bookstore.backend.model.dto.RatingResponse;
 import com.bookstore.backend.service.rating.RatingService;
 
 @RestController
-@RequestMapping("/api/ratings")
+@RequestMapping("/ratings")
 public class RatingController {
 
     @Autowired
