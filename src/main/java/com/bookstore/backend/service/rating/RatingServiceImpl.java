@@ -1,5 +1,6 @@
 package com.bookstore.backend.service.rating;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +34,11 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public RatingResponse updateOrCreateRating(Long userId, Long bookId, int ratingValue)
             throws UserNotFoundException, BookNotFoundException {
+
+        if (ratingValue < 1 || ratingValue > 5) {
+            throw new RatingNotFoundException("El valor de la valoración debe estar entre 1 y 5.");
+        }
+
         User user = userService.getUserById(userId);
         if (user == null) {
             throw new UserNotFoundException("Usuario no encontrado con ID: " + userId);
