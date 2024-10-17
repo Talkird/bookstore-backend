@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.bookstore.backend.model.order.Order;
 import com.bookstore.backend.model.rating.Rating;
+import com.bookstore.backend.model.wishlist.WishList;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,7 +55,10 @@ public class User implements UserDetails {
     private List<Order> orders;
 
     @OneToMany(mappedBy = "user")
-    private List<Rating> ratings; //TODO agregar a service
+    private List<Rating> ratings; 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private WishList wishlist;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,5 +89,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    // .
 }
