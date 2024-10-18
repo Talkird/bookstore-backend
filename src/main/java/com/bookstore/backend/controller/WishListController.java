@@ -1,5 +1,6 @@
 package com.bookstore.backend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,28 +15,29 @@ import com.bookstore.backend.service.wishlist.WishListService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/wishlist")
+@RequestMapping("/wishlist")
 @RequiredArgsConstructor
 public class WishListController {
 
+    @Autowired
     private final WishListService wishlistService;
 
-    @GetMapping("/wishlist/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<WishList> getWishlistByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(wishlistService.getWishlistByUserId(userId));
     }
 
-    @PostMapping("/wishlist/{userId}/add/{bookId}")
+    @PostMapping("/{userId}/add/{bookId}")
     public ResponseEntity<WishList> addBookToWishlist(@PathVariable Long userId, @PathVariable Long bookId) {
         return ResponseEntity.ok(wishlistService.addBookToWishlist(userId, bookId));
     }
 
-    @DeleteMapping("/wishlist/{userId}/remove/{bookId}")
+    @DeleteMapping("/{userId}/remove/{bookId}")
     public ResponseEntity<WishList> removeBookFromWishlist(@PathVariable Long userId, @PathVariable Long bookId) {
         return ResponseEntity.ok(wishlistService.removeBookFromWishlist(userId, bookId));
     }
 
-    @PostMapping("/wishlist/{userId}/create")
+    @PostMapping("/{userId}/create")
     public ResponseEntity<WishList> createWishlistForUser(@PathVariable Long userId) {
         return ResponseEntity.ok(wishlistService.createWishlistForUser(userId));
     }

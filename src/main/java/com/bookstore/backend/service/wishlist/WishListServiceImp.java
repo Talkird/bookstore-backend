@@ -1,6 +1,6 @@
 package com.bookstore.backend.service.wishlist;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +67,7 @@ public class WishListServiceImp implements WishListService {
 
         WishList wishlist = WishList.builder()
                 .user(user)
-                .books(List.of())
+                .books(Set.of())
                 .build();
 
         return wishlistRepository.save(wishlist);
