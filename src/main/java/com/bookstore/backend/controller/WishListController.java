@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookstore.backend.model.wishlist.WishList;
-import com.bookstore.backend.service.wishlist.WishListServiceImp;
+import com.bookstore.backend.service.wishlist.WishListService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WishListController {
 
-    private final WishListServiceImp wishlistService;
+    private final WishListService wishlistService;
 
     @GetMapping("/wishlist/{userId}")
     public ResponseEntity<WishList> getWishlistByUserId(@PathVariable Long userId) {
