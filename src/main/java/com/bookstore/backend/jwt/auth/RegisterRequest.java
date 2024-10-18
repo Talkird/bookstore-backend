@@ -1,4 +1,4 @@
-package com.bookstore.backend.jwt.auth;   
+package com.bookstore.backend.jwt.auth;
 
 import com.bookstore.backend.model.user.Role;
 
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
 
-    private String name;  
+    private String name;
 
     private String email;
 
