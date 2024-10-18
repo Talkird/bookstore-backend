@@ -9,10 +9,10 @@ import com.bookstore.backend.exception.auth.UserNotFoundException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
 import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.user.User;
-import com.bookstore.backend.repository.WishListRepository;
 import com.bookstore.backend.model.wishlist.WishList;
 import com.bookstore.backend.repository.BookRepository;
 import com.bookstore.backend.repository.UserRepository;
+import com.bookstore.backend.repository.WishListRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -32,29 +32,29 @@ public class WishListServiceImp implements WishListService {
 
     @Override
     public WishList getWishlistByUserId(Long userId) throws EntityNotFoundException {
-            return wishlistRepository.findByUserId(userId)
-                            .orElseThrow(() -> new EntityNotFoundException("No se encontro lista de deseados para el usuario con id: " + userId));
+        return wishlistRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró lista de deseos para el usuario con id: " + userId));
     }
 
     @Override
     public WishList addBookToWishlist(Long userId, Long bookId) throws UserNotFoundException, BookNotFoundException {
-            User user = userRepository.findById(userId)
-                            .orElseThrow(() -> new UserNotFoundException("No se encontro lista de deseados para el usuario con id: " + userId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("No se encontró usuario con id: " + userId));
 
-            Book book = bookRepository.findById(bookId)
-                            .orElseThrow(() -> new BookNotFoundException("No se encontro libro con id: " + bookId));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("No se encontró libro con id: " + bookId));
 
-            WishList wishlist = wishlistRepository.findByUserId(userId)
-                            .orElseThrow(() -> new EntityNotFoundException("No se encontro lista de deseados para el usuario con id: " + userId));
+        WishList wishlist = wishlistRepository.findByUserId(userId)
+                .orElseGet(() -> createWishlistForUser(userId));
 
-            wishlist.getBooks().add(book);
-            return wishlistRepository.save(wishlist);
+        wishlist.getBooks().add(book);
+        return wishlistRepository.save(wishlist);
     }
 
     @Override
     public WishList removeBookFromWishlist(Long userId, Long bookId) throws EntityNotFoundException {
         WishList wishlist = wishlistRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("No se encontro lista de deseados para el usuario con id: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró lista de deseos para el usuario con id: " + userId));
 
         wishlist.getBooks().removeIf(book -> book.getId().equals(bookId));
         return wishlistRepository.save(wishlist);
@@ -63,7 +63,7 @@ public class WishListServiceImp implements WishListService {
     @Override
     public WishList createWishlistForUser(Long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("No se encontro lista de deseados para el usuario con id: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("No se encontró usuario con id: " + userId));
 
         WishList wishlist = WishList.builder()
                 .user(user)
