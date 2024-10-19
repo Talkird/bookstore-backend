@@ -1,5 +1,6 @@
 package com.bookstore.backend.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +21,7 @@ import com.bookstore.backend.model.book.Genre;
 import com.bookstore.backend.model.dto.BookRequest;
 import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.service.book.BookService;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/books")
@@ -34,11 +37,10 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBooks());
     }
 
-    // ADMIN
-    @PostMapping("/create")
-    public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest book) {
-        BookResponse createdBook = bookService.createBook(book);
-        return ResponseEntity.status(201).body(createdBook); // 201 Created
+    @PostMapping(value = "/create", consumes = "multipart/form-data")
+    public ResponseEntity<BookResponse> createBook(@ModelAttribute BookRequest bookRequest) throws IOException {
+        BookResponse createdBook = bookService.createBook(bookRequest);
+        return ResponseEntity.status(201).body(createdBook);
     }
 
     // ADMIN

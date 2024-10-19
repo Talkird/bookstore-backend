@@ -213,7 +213,7 @@ public class CartServiceImpl implements CartService {
         order.setPaymentMethod(paymentMethod);
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
-        
+
         // Limpiar el carrito
         clearCart(userId);
 

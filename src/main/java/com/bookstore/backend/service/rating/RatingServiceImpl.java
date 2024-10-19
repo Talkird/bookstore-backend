@@ -1,6 +1,5 @@
 package com.bookstore.backend.service.rating;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,7 +44,7 @@ public class RatingServiceImpl implements RatingService {
         }
 
         Book book = bookRepository.findById(bookId)
-        .orElseThrow(() -> new BookNotFoundException("Libro no encontrado con ID: " + bookId));
+                .orElseThrow(() -> new BookNotFoundException("Libro no encontrado con ID: " + bookId));
 
         Optional<Rating> existingRating = ratingRepository.findByUserIdAndBookId(userId, bookId);
         Rating rating;

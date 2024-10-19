@@ -45,7 +45,6 @@ public class SecurityConfig {
                         .requestMatchers("/orders/**").permitAll()
                         .requestMatchers("/discounts/apply").hasAnyAuthority(Role.USER.name())
                         .requestMatchers("/discounts/**").hasAnyAuthority(Role.ADMIN.name())
-                        .requestMatchers("/images/**").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers("/ratings/**").hasAnyAuthority(Role.USER.name())
                         .anyRequest()
                         .authenticated())

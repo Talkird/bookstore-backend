@@ -1,10 +1,12 @@
 package com.bookstore.backend.service.book;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bookstore.backend.exception.book.BookAlreadyExistsException;
 import com.bookstore.backend.exception.book.BookNotFoundException;
@@ -31,12 +33,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponse createBook(BookRequest book) throws BookAlreadyExistsException, InvalidBookDataException {
-        if (book.getPrice() < 0) {
-            throw new InvalidBookDataException("El precio debe ser positivo.");
-        }
+    public BookResponse createBook(BookRequest bookRequest) {
+        Book book = BookRequest.convertToBook(bookRequest);
+        bookRepository.save(book);
 
-        return BookResponse.convertToBookResponse(bookRepository.save(BookRequest.convertToBook(book)));
+        return BookResponse.convertToBookResponse(book);
     }
 
     @Override

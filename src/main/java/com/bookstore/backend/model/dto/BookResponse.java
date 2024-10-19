@@ -1,13 +1,13 @@
 package com.bookstore.backend.model.dto;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.book.Genre;
-
-import lombok.Builder;
-import lombok.Data;
 
 @Data
 @Builder
@@ -22,6 +22,7 @@ public class BookResponse {
     private Genre genre;
     private String description;
     private double rating;
+    private byte[] image; 
 
     public static BookResponse convertToBookResponse(Book book) {
         return BookResponse.builder()
@@ -35,6 +36,7 @@ public class BookResponse {
                 .genre(book.getGenre())
                 .description(book.getDescription())
                 .rating(book.getRating())
+                .image(book.getImage())
                 .build();
     }
 
@@ -56,6 +58,7 @@ public class BookResponse {
         book.setGenre(bookResponse.getGenre());
         book.setDescription(bookResponse.getDescription());
         book.setRating(bookResponse.getRating());
+        book.setImage(bookResponse.getImage());
         return book;
     }
 }
