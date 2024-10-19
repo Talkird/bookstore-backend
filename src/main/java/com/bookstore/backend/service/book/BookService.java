@@ -9,28 +9,34 @@ import com.bookstore.backend.model.book.Genre;
 import com.bookstore.backend.model.dto.BookRequest;
 import com.bookstore.backend.model.dto.BookResponse;
 
+import java.io.IOException;
+
 public interface BookService {
 
-    public List<BookResponse> getBooks() throws BookNotFoundException;
+        public List<BookResponse> getBooks() throws BookNotFoundException;
 
-    public BookResponse createBook(BookRequest book) throws BookAlreadyExistsException, InvalidBookDataException;
+        public BookResponse createBook(BookRequest book)
+                        throws IOException, BookAlreadyExistsException, InvalidBookDataException;
 
-    public BookResponse getBookById(Long id) throws BookNotFoundException;
+        public BookResponse getBookById(Long id) throws BookNotFoundException;
 
-    public List<BookResponse> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException;
+        public List<BookResponse> getBookByGenre(Genre genre) throws BookNotFoundException, InvalidBookDataException;
 
-    public BookResponse updateBook(Long id, BookRequest book) throws BookNotFoundException, InvalidBookDataException;
+        public BookResponse updateBook(Long id, BookRequest book)
+                        throws BookNotFoundException, InvalidBookDataException;
 
-    public void deleteBook(Long id) throws BookNotFoundException;
+        public void deleteBook(Long id) throws BookNotFoundException;
 
-    public List<BookResponse> getBooksByPriceRange(double minPrice, double maxPrice) throws InvalidBookDataException;
+        public List<BookResponse> getBooksByPriceRange(double minPrice, double maxPrice)
+                        throws InvalidBookDataException;
 
-    public List<BookResponse> getBooksByTitle(String title) throws BookNotFoundException;
+        public List<BookResponse> getBooksByTitle(String title) throws BookNotFoundException;
 
-    public List<BookResponse> getBooksByAuthor(String author) throws BookNotFoundException;
+        public List<BookResponse> getBooksByAuthor(String author) throws BookNotFoundException;
 
-    public List<BookResponse> getAvailableBooks() throws BookNotFoundException;
+        public List<BookResponse> getAvailableBooks() throws BookNotFoundException;
 
-    public List<BookResponse> getBooksOrderedByPrice(boolean ascending)
-            throws BookNotFoundException, InvalidBookDataException;
+        public List<BookResponse> getBooksOrderedByPrice(boolean ascending)
+                        throws BookNotFoundException, InvalidBookDataException;
+
 }

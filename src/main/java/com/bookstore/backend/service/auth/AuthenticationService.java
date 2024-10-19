@@ -1,4 +1,4 @@
-package com.bookstore.backend.service.auth; 
+package com.bookstore.backend.service.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,73 +20,74 @@ import com.bookstore.backend.service.cart.CartService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-        private final UserRepository repository;
-        private final PasswordEncoder passwordEncoder;
-        private final JwtService jwtService;
-        private final AuthenticationManager authenticationManager;
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-        @Autowired
-        private CartService cartService;
+    @Autowired
+    private CartService cartService;
 
-        public AuthenticationResponse register(RegisterRequest request) {
-                        if (repository.existsByEmail(request.getEmail())) {
-                throw new EmailAlreadyExistsException("El correo electrónico ya está registrado.");
-                }
-                
-                var user = User.builder()
-                                .name(request.getName())
-                                .email(request.getEmail())
-                                .password(passwordEncoder.encode(request.getPassword()))
-                                .role(request.getRole())
-                                .build();
-
-                repository.save(user);
-                cartService.createCart(user);
-                var jwtToken = jwtService.generateToken(user);
-                return AuthenticationResponse.builder()
-                                .accessToken(jwtToken)
-                                .build();
+    public AuthenticationResponse register(RegisterRequest request) {
+        if (repository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException("El correo electrónico ya está registrado.");
         }
 
-        public AuthenticationResponse authenticate(AuthenticationRequest request) {
-                try {
-                    // Intentar autenticar al usuario con las credenciales proporcionadas
-                    authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
+        var user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .build();
+
+        repository.save(user);
+        cartService.createCart(user);
+        var jwtToken = jwtService.generateToken(user);
+
+        // Create and return the response including userId
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .userId(user.getId()) // Assuming User has a getId() method
+                .build();
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
-                            request.getPassword()
-                        )
-                    );
-                } catch (BadCredentialsException ex) {
-                    // Lanzar excepción personalizada si las credenciales son incorrectas
-                    throw new InvalidCredentialsException("Nombre de usuario o contraseña incorrectos.");
-                }
-            
-                var user = repository.findByEmail(request.getEmail())
-                    .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el correo: " + request.getEmail()));
-            
-                var jwtToken = jwtService.generateToken(user);
-            
-                return AuthenticationResponse.builder()
-                    .accessToken(jwtToken)
-                    .build();
+                            request.getPassword()));
+        } catch (BadCredentialsException ex) {
+            throw new InvalidCredentialsException("Nombre de usuario o contraseña incorrectos.");
         }
 
-        public User getUserByEmail(String email) {
-                return repository.findByEmail(email)
-                                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el correo: " + email));
-        }
+        var user = repository.findByEmail(request.getEmail())
+                .orElseThrow(
+                        () -> new UserNotFoundException("Usuario no encontrado con el correo: " + request.getEmail()));
 
-        public User getUserById(Long id) {
-                return repository.findById(id)
-                                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el id: " + id));
-        }
+        var jwtToken = jwtService.generateToken(user);
 
-        public void updateUser(User user) {
-                repository.save(user);
-        }
+        // Create and return the response including userId
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .userId(user.getId()) // Assuming User has a getId() method
+                .build();
+    }
+
+    public User getUserByEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el correo: " + email));
+    }
+
+    public User getUserById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el id: " + id));
+    }
+
+    public void updateUser(User user) {
+        repository.save(user);
+    }
 }

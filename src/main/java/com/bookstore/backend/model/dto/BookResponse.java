@@ -22,7 +22,7 @@ public class BookResponse {
     private Genre genre;
     private String description;
     private double rating;
-    private byte[] image; 
+    private String imagePath;
 
     public static BookResponse convertToBookResponse(Book book) {
         return BookResponse.builder()
@@ -36,7 +36,7 @@ public class BookResponse {
                 .genre(book.getGenre())
                 .description(book.getDescription())
                 .rating(book.getRating())
-                .image(book.getImage())
+                .imagePath(book.getImagePath())
                 .build();
     }
 
@@ -58,7 +58,7 @@ public class BookResponse {
         book.setGenre(bookResponse.getGenre());
         book.setDescription(bookResponse.getDescription());
         book.setRating(bookResponse.getRating());
-        book.setImage(bookResponse.getImage());
+        book.setImagePath(bookResponse.getImagePath());
         return book;
     }
 }

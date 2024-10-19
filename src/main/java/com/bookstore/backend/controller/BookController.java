@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch.File;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +25,6 @@ import com.bookstore.backend.model.book.Genre;
 import com.bookstore.backend.model.dto.BookRequest;
 import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.service.book.BookService;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/books")
@@ -106,4 +109,5 @@ public class BookController {
     public ResponseEntity<List<BookResponse>> getBooksOrderedByPriceDesc() {
         return ResponseEntity.ok(bookService.getBooksOrderedByPrice(false)); // false para orden descendente
     }
+
 }

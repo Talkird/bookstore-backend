@@ -10,7 +10,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
@@ -48,9 +47,8 @@ public class Book {
     @Column(nullable = false)
     private int stock;
 
-    @Lob
     @Column(nullable = false)
-    private byte[] image;
+    private String imagePath;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -66,14 +64,14 @@ public class Book {
     private double rating;
 
     public void updateAverageRating() {
-        if (ratings == null || ratings.isEmpty())
+        if (ratings == null || ratings.isEmpty()) {
             this.rating = 0.0;
-
-        int total = 0;
-        for (Rating r : ratings) {
-            total += r.getRating();
+        } else {
+            int total = 0;
+            for (Rating r : ratings) {
+                total += r.getRating();
+            }
+            this.rating = (double) total / ratings.size();
         }
-
-        this.rating = (double) total / ratings.size();
     }
 }

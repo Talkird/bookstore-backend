@@ -1,10 +1,10 @@
 package com.bookstore.backend.service.book;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +16,9 @@ import com.bookstore.backend.model.book.Genre;
 import com.bookstore.backend.model.dto.BookRequest;
 import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.repository.BookRepository;
+
+import java.io.IOException;
+import java.io.File;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -33,11 +36,33 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponse createBook(BookRequest bookRequest) {
-        Book book = BookRequest.convertToBook(bookRequest);
-        bookRepository.save(book);
+    public BookResponse createBook(BookRequest book)
+            throws IOException, BookAlreadyExistsException, InvalidBookDataException {
+        String imagePath = saveImage(book.getImage());
 
-        return BookResponse.convertToBookResponse(book);
+        Book newBook = BookRequest.convertToBook(book);
+        newBook.setImagePath(imagePath);
+
+        bookRepository.save(newBook);
+
+        return BookResponse.convertToBookResponse(newBook);
+    }
+
+    private String saveImage(MultipartFile image) throws IOException {
+        if (image != null && !image.isEmpty()) {
+            String uploadDir = "C:\\Users\\losau\\Desktop\\books";
+            String fileName = image.getOriginalFilename();
+            File uploadDirFile = new File(uploadDir);
+            if (!uploadDirFile.exists()) {
+                uploadDirFile.mkdirs();
+            }
+
+            File imageFile = new File(uploadDir + "\\" + fileName);
+            image.transferTo(imageFile);
+
+            return uploadDir + "\\" + fileName;
+        }
+        return null;
     }
 
     @Override
@@ -120,4 +145,5 @@ public class BookServiceImpl implements BookService {
         return BookResponse.convertToBookResponse(books
                 .orElseThrow(() -> new BookNotFoundException("No se encontraron libros ordenados por precio.")));
     }
+
 }

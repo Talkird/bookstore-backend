@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import com.bookstore.backend.service.rating.RatingService;
 
 @RestController
 @RequestMapping("/ratings")
+@CrossOrigin(origins = "http://localhost:5173")
 public class RatingController {
 
     @Autowired
@@ -42,7 +44,8 @@ public class RatingController {
     }
 
     @PostMapping("/user/{userId}/book/{bookId}")
-    public ResponseEntity<RatingResponse> createOrUpdateRating(@PathVariable Long userId,@PathVariable Long bookId,@RequestBody RatingRequest ratingRequest) {
+    public ResponseEntity<RatingResponse> createOrUpdateRating(@PathVariable Long userId, @PathVariable Long bookId,
+            @RequestBody RatingRequest ratingRequest) {
         int ratingValue = ratingRequest.getRatingValue();
         RatingResponse rating = ratingService.updateOrCreateRating(userId, bookId, ratingValue);
         return ResponseEntity.ok(rating);

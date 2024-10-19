@@ -4,9 +4,6 @@ import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.book.Genre;
 import lombok.Builder;
 import lombok.Data;
-
-import java.io.IOException;
-
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
@@ -21,7 +18,7 @@ public class BookRequest {
     private int stock;
     private Genre genre;
     private String description;
-    private MultipartFile image; 
+    private MultipartFile image; // Change from String to MultipartFile
 
     public static Book convertToBook(BookRequest bookRequest) {
         Book book = new Book();
@@ -35,19 +32,9 @@ public class BookRequest {
         book.setGenre(bookRequest.getGenre());
         book.setDescription(bookRequest.getDescription());
 
-        // Convert MultipartFile to byte[]
-        if (bookRequest.getImage() != null) {
-            try {
-                book.setImage(bookRequest.getImage().getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to convert image file to byte array", e);
-            }
-        }
-
         return book;
     }
 
-    // TODO cuidado
     public static BookRequest convertToBookRequest(Book book) {
         return BookRequest.builder()
                 .id(book.getId())
@@ -61,5 +48,4 @@ public class BookRequest {
                 .description(book.getDescription())
                 .build();
     }
-
 }
