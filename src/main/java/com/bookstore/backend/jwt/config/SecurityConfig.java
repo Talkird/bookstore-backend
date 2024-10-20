@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/ratings/**").hasAnyAuthority(Role.USER.name())
                         .anyRequest()
                         .authenticated())
+
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
