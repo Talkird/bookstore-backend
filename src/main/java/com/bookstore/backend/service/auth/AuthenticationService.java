@@ -50,7 +50,8 @@ public class AuthenticationService {
         // Create and return the response including userId
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
-                .userId(user.getId()) // Assuming User has a getId() method
+                .userId(user.getId()) 
+                .role(user.getRole().toString())
                 .build();
     }
 
@@ -74,6 +75,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .userId(user.getId()) // Assuming User has a getId() method
+                .role(user.getRole().toString())
                 .build();
     }
 
