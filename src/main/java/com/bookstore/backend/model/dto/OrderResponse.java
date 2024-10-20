@@ -1,7 +1,9 @@
 package com.bookstore.backend.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.bookstore.backend.model.cart.CartItem;
 import com.bookstore.backend.model.order.OrderStatus;
 import com.bookstore.backend.model.order.PaymentMethod;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,6 +34,8 @@ public class OrderResponse {
     private Long userId;
     @JsonProperty("cart_id")
     private Long cartId;
+
+    private List<CartItem> books;
+
     private OrderStatus status;
 }
-

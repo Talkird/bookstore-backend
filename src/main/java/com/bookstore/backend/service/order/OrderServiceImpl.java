@@ -26,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getOrdersByUserId(Long userId) throws UserNotFoundException {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el id: " + userId));
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con el id: " + userId));
         return mapToOrderResponse(user.getOrders());
     }
 
@@ -38,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
     public OrderResponse getOrderById(Long orderId) throws OrderNotFoundException {
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new OrderNotFoundException("Pedido no encontrado con el id: " + orderId));
+                .orElseThrow(() -> new OrderNotFoundException("Pedido no encontrado con el id: " + orderId));
         return mapToOrderResponse(order);
     }
 
@@ -61,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
         existingOrder.setShippingAddress(updatedOrder.getShippingAddress());
         existingOrder.setTotal(updatedOrder.getTotal());
         existingOrder.setPaymentMethod(updatedOrder.getPaymentMethod());
+        existingOrder.setCart(updatedOrder.getCart());
         existingOrder.setStatus(updatedOrder.getStatus());
 
         Order savedOrder = orderRepository.save(existingOrder);
@@ -79,12 +80,12 @@ public class OrderServiceImpl implements OrderService {
                 order.getPaymentMethod(),
                 order.getUser().getId(),
                 order.getCart().getId(),
-                order.getStatus()
-        );
+                order.getCart().getBooks(), // List<CartItem>
+                order.getStatus());
     }
 
     private List<OrderResponse> mapToOrderResponse(List<Order> orders) {
         return orders.stream().map(this::mapToOrderResponse).collect(Collectors.toList());
     }
-    
+
 }
