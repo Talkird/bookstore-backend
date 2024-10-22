@@ -23,14 +23,18 @@ import com.bookstore.backend.model.dto.CartItemResponse;
 import com.bookstore.backend.model.dto.OrderRequest;
 import com.bookstore.backend.model.dto.OrderResponse;
 import com.bookstore.backend.model.order.Order;
+import com.bookstore.backend.model.order.OrderItem;
 import com.bookstore.backend.model.order.OrderStatus;
 import com.bookstore.backend.model.order.PaymentMethod;
 import com.bookstore.backend.model.user.User;
 import com.bookstore.backend.repository.CartItemRepository;
 import com.bookstore.backend.repository.CartRepository;
+import com.bookstore.backend.repository.OrderItemRepository;
+import com.bookstore.backend.repository.OrderRepository;
 import com.bookstore.backend.service.book.BookService;
 import com.bookstore.backend.service.discount.DiscountService;
 import com.bookstore.backend.service.order.OrderService;
+import java.util.ArrayList;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -49,6 +53,12 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private DiscountService discountService;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public List<CartItemResponse> getCart(Long userId) throws CartNotFoundException {
@@ -214,7 +224,18 @@ public class CartServiceImpl implements CartService {
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
 
-        // Limpiar el carrito
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (CartItem cartItem : cart.getBooks()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setTitle(cartItem.getBook().getTitle());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPrice(cartItem.getPrice());
+            orderItem.setOrder(order);
+            orderItems.add(orderItem);
+        }
+
+        order.setItems(orderItems);
         clearCart(userId);
 
         return orderService.createOrder(order);

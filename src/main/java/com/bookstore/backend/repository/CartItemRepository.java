@@ -7,5 +7,5 @@ import com.bookstore.backend.model.cart.CartItem;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-
+    void deleteByBookId(Long bookId);
 }

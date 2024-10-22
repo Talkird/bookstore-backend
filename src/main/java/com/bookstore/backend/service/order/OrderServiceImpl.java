@@ -62,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
         existingOrder.setTotal(updatedOrder.getTotal());
         existingOrder.setPaymentMethod(updatedOrder.getPaymentMethod());
         existingOrder.setCart(updatedOrder.getCart());
+        existingOrder.setItems(updatedOrder.getItems());
         existingOrder.setStatus(updatedOrder.getStatus());
 
         Order savedOrder = orderRepository.save(existingOrder);
@@ -80,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
                 order.getPaymentMethod(),
                 order.getUser().getId(),
                 order.getCart().getId(),
-                order.getCart().getBooks(), // List<CartItem>
+                order.getItems(),
                 order.getStatus());
     }
 

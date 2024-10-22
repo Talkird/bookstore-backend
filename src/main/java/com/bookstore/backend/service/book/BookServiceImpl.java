@@ -16,6 +16,10 @@ import com.bookstore.backend.model.book.Genre;
 import com.bookstore.backend.model.dto.BookRequest;
 import com.bookstore.backend.model.dto.BookResponse;
 import com.bookstore.backend.repository.BookRepository;
+import com.bookstore.backend.repository.CartItemRepository;
+import com.bookstore.backend.repository.RatingRepository;
+
+import jakarta.transaction.Transactional;
 
 import java.io.IOException;
 import java.io.File;
@@ -25,6 +29,12 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     @Override
     public List<BookResponse> getBooks() throws BookNotFoundException {
@@ -98,12 +108,15 @@ public class BookServiceImpl implements BookService {
         return BookResponse.convertToBookResponse(bookRepository.save(existingBook));
     }
 
-    @Override
-    public void deleteBook(Long id) throws BookNotFoundException {
-        if (!bookRepository.existsById(id)) {
-            throw new BookNotFoundException("No se encontró un libro con ID " + id);
+    @Transactional
+    public void deleteBook(Long bookId) throws BookNotFoundException {
+        if (!bookRepository.existsById(bookId)) {
+            throw new BookNotFoundException("No se encontró un libro con ID " + bookId);
         }
-        bookRepository.deleteById(id);
+
+        cartItemRepository.deleteByBookId(bookId);
+        ratingRepository.deleteByBookId(bookId);
+        bookRepository.deleteById(bookId);
     }
 
     @Override
