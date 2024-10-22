@@ -40,8 +40,8 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBooks());
     }
 
-    @PostMapping(value = "/create", consumes = "multipart/form-data")
-    public ResponseEntity<BookResponse> createBook(@ModelAttribute BookRequest bookRequest) throws IOException {
+    @PostMapping(value = "/create")
+    public ResponseEntity<BookResponse> createBook(@RequestBody BookRequest bookRequest) throws IOException {
         BookResponse createdBook = bookService.createBook(bookRequest);
         return ResponseEntity.status(201).body(createdBook);
     }
