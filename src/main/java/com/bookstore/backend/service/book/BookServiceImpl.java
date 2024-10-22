@@ -48,7 +48,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookResponse createBook(BookRequest book)
             throws IOException, BookAlreadyExistsException, InvalidBookDataException {
-        String imagePath = saveImage(book.getImage());
+        String imagePath = book.getImagePath();
 
         Book newBook = BookRequest.convertToBook(book);
         newBook.setImagePath(imagePath);
@@ -56,23 +56,6 @@ public class BookServiceImpl implements BookService {
         bookRepository.save(newBook);
 
         return BookResponse.convertToBookResponse(newBook);
-    }
-
-    private String saveImage(MultipartFile image) throws IOException {
-        if (image != null && !image.isEmpty()) {
-            String uploadDir = "C:\\Users\\losau\\Desktop\\books";
-            String fileName = image.getOriginalFilename();
-            File uploadDirFile = new File(uploadDir);
-            if (!uploadDirFile.exists()) {
-                uploadDirFile.mkdirs();
-            }
-
-            File imageFile = new File(uploadDir + "\\" + fileName);
-            image.transferTo(imageFile);
-
-            return uploadDir + "\\" + fileName;
-        }
-        return null;
     }
 
     @Override

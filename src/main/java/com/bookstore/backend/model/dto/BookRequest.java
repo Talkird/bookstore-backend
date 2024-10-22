@@ -4,7 +4,6 @@ import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.book.Genre;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -18,7 +17,7 @@ public class BookRequest {
     private int stock;
     private Genre genre;
     private String description;
-    private MultipartFile image; // Change from String to MultipartFile
+    private String imagePath;
 
     public static Book convertToBook(BookRequest bookRequest) {
         Book book = new Book();
@@ -31,6 +30,7 @@ public class BookRequest {
         book.setStock(bookRequest.getStock());
         book.setGenre(bookRequest.getGenre());
         book.setDescription(bookRequest.getDescription());
+        book.setImagePath(bookRequest.getImagePath());
 
         return book;
     }
@@ -46,6 +46,7 @@ public class BookRequest {
                 .stock(book.getStock())
                 .genre(book.getGenre())
                 .description(book.getDescription())
+                .imagePath(book.getImagePath())
                 .build();
     }
 }
