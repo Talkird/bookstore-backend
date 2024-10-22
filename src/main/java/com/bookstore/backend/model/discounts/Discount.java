@@ -24,12 +24,11 @@ public class Discount {
     private double percentage;
 
     @Column
-    private Boolean isActive; // Para activar o desactivar descuentos
+    private Boolean isActive;
 
     @Column
-    private LocalDateTime expirationDate; // Fecha de expiración del código de descuento
+    private LocalDateTime expirationDate;
 
-    // Método para verificar si el descuento está activo y no expirado
     public boolean isValid() {
         return isActive && expirationDate.isAfter(LocalDateTime.now());
     }

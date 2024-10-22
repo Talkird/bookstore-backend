@@ -179,13 +179,7 @@ public class CartServiceImpl implements CartService {
 
         double totalPrice = cart.getTotal();
 
-        // Aplicar descuento por cantidad de productos (más de 5 productos)
-        int totalItems = cart.getBooks().stream().mapToInt(CartItem::getQuantity).sum();
-        if (totalItems > 5) {
-            totalPrice = totalPrice * 0.9; // 10% de descuento si hay más de 5 productos
-        }
-
-        // Aplicar descuento por código de descuento
+        // Aplicar o descuento no total do carrinho
         if (discountCode != null && !discountCode.isEmpty()) {
             try {
                 totalPrice = discountService.applyDiscount(discountCode, totalPrice);
@@ -194,13 +188,6 @@ public class CartServiceImpl implements CartService {
             }
         }
 
-        // Aplicar descuento por método de pago (ejemplo: tarjeta de crédito tiene 5% de
-        // descuento)
-        if (paymentMethod == PaymentMethod.CREDIT_CARD) {
-            totalPrice = totalPrice * 0.95; // 5% de descuento
-        }
-
-        // Verificar stock y actualizar inventario
         for (CartItem cartItem : cart.getBooks()) {
             Book book = cartItem.getBook();
             if (book.getStock() < cartItem.getQuantity()) {

@@ -34,7 +34,7 @@ public class DiscountController {
             double newTotal = discountService.applyDiscount(discountCode, totalPrice);
             return ResponseEntity.ok(newTotal);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Error en código de descuento
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 

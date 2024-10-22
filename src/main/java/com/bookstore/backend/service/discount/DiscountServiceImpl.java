@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class DiscountServiceImpl implements DiscountService{
+public class DiscountServiceImpl implements DiscountService {
 
     @Autowired
     private DiscountRepository discountRepository;
@@ -41,14 +41,14 @@ public class DiscountServiceImpl implements DiscountService{
 
     public Discount updateDiscount(Long id, Discount newDiscountData) throws InvalidDiscountException {
         return discountRepository.findById(id)
-            .map(discount -> {
-                discount.setCode(newDiscountData.getCode());
-                discount.setPercentage(newDiscountData.getPercentage());
-                discount.setIsActive(newDiscountData.getIsActive());
-                discount.setExpirationDate(newDiscountData.getExpirationDate());
-                return discountRepository.save(discount);
-            })
-            .orElseThrow(() -> new InvalidDiscountException("Descuento no encontrado con id: " + id));
+                .map(discount -> {
+                    discount.setCode(newDiscountData.getCode());
+                    discount.setPercentage(newDiscountData.getPercentage());
+                    discount.setIsActive(newDiscountData.getIsActive());
+                    discount.setExpirationDate(newDiscountData.getExpirationDate());
+                    return discountRepository.save(discount);
+                })
+                .orElseThrow(() -> new InvalidDiscountException("Descuento no encontrado con id: " + id));
     }
 
     public void deleteDiscount(Long id) throws InvalidDiscountException {
