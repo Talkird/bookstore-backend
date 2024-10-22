@@ -122,4 +122,20 @@ public class RatingServiceImpl implements RatingService {
     private List<RatingResponse> mapToRatingResponse(List<Rating> ratings) {
         return ratings.stream().map(this::mapToRatingResponse).collect(Collectors.toList());
     }
+
+    @Override
+    public double getBookRating(Long bookId) throws BookNotFoundException {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Libro no encontrado con ID: " + bookId));
+
+        List<Rating> ratings = book.getRatings();
+        if (ratings.isEmpty()) {
+            return 0;
+        }
+        double total = 0;
+        for (Rating rating : ratings) {
+            total += rating.getRating();
+        }
+        return Math.round(total / ratings.size());
+    }
 }

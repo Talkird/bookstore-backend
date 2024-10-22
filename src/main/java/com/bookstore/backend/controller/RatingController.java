@@ -25,6 +25,11 @@ public class RatingController {
     @Autowired
     private RatingService ratingService;
 
+    @GetMapping("/{bookId}")
+    public double getAverageRatingByBook(@PathVariable Long bookId) {
+        return ratingService.getBookRating(bookId);
+    }
+
     @GetMapping("/book/{bookId}")
     public ResponseEntity<List<RatingResponse>> getRatingsByBook(@PathVariable Long bookId) {
         List<RatingResponse> ratings = ratingService.getRatingsByBook(bookId);
