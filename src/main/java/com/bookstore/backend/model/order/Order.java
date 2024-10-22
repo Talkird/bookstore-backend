@@ -14,7 +14,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import java.time.LocalDateTime;
 
-import com.bookstore.backend.model.book.Book;
 import com.bookstore.backend.model.cart.Cart;
 import com.bookstore.backend.model.user.User;
 
@@ -57,6 +56,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentMethod paymentMethod;
+
+    @Column
+    private double preDiscountPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

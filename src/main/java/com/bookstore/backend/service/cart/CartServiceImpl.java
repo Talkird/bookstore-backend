@@ -178,6 +178,7 @@ public class CartServiceImpl implements CartService {
                         () -> new CartNotFoundException("El carrito no fue encontrado para el usuario especificado."));
 
         double totalPrice = cart.getTotal();
+        double preDiscountPrice = totalPrice;
 
         // Aplicar o descuento no total do carrinho
         if (discountCode != null && !discountCode.isEmpty()) {
@@ -202,6 +203,7 @@ public class CartServiceImpl implements CartService {
         Order order = new Order();
         order.setCart(cart);
         order.setUser(cart.getUser());
+        order.setPreDiscountPrice(preDiscountPrice); // Precio antes do desconto aplicado acai muito bom
         order.setTotal(totalPrice); // Se usa el total con descuentos aplicados
         order.setCustomerName(orderRequest.getCustomerName());
         order.setCustomerEmail(orderRequest.getCustomerEmail());

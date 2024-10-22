@@ -64,6 +64,7 @@ public class OrderServiceImpl implements OrderService {
         existingOrder.setCart(updatedOrder.getCart());
         existingOrder.setItems(updatedOrder.getItems());
         existingOrder.setStatus(updatedOrder.getStatus());
+        existingOrder.setPreDiscountPrice(updatedOrder.getPreDiscountPrice());
 
         Order savedOrder = orderRepository.save(existingOrder);
         return mapToOrderResponse(savedOrder);
@@ -82,6 +83,7 @@ public class OrderServiceImpl implements OrderService {
                 order.getUser().getId(),
                 order.getCart().getId(),
                 order.getItems(),
+                order.getPreDiscountPrice(),
                 order.getStatus());
     }
 

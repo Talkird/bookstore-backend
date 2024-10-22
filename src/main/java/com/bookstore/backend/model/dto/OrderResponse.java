@@ -37,5 +37,8 @@ public class OrderResponse {
     @JsonProperty("items")
     private List<OrderItem> items;
 
+    @JsonProperty("pre_discount_price")
+    private double preDiscountPrice;
+
     private OrderStatus status;
 }
